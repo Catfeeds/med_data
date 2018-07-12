@@ -65,10 +65,32 @@ class AdminController extends Controller
         if(Yii::app()->user->id == 1)
         return [
             ['label'=>'管理中心','icon'=>'icon-settings','url'=>'/admin/common/index','active'=>$this->route=='admin/common/index'],
+            ['label' => '项目管理', 'icon' => 'icon-speedometer', 'items' => [
+                ['label' => '项目列表', 'url' => ['/admin/pro/list']],
+                ['label' => '添加项目', 'icon'=>'fa-plus fa','url' => ['/admin/pro/edit'],'active'=>$this->route=='admin/pro/edit'],
+            ]],
+            ['label'=>'数据管理','icon'=>'icon-speedometer','url'=>['/admin/data/list'],'active'=>$this->route=='admin/data/edit'],
             ['label' => '病例标签库管理', 'icon' => 'icon-speedometer', 'items' => [
                 ['label' => '标签列表', 'url' => ['/admin/basicTag/list']],
-                ['label' => '添加标签', 'url' => ['/admin/basicTag/edit'],'active'=>$this->route=='admin/basicTag/edit'],
+                ['label' => '添加标签', 'icon'=>'fa-plus fa','url' => ['/admin/basicTag/edit'],'active'=>$this->route=='admin/basicTag/edit'],
             ]],
+            ['label' => '量表管理', 'icon' => 'icon-speedometer', 'items' => [
+                ['label' => '量表列表', 'url' => ['/admin/lb/list']],
+                ['label' => '添加量表', 'icon'=>'fa-plus fa','url' => ['/admin/lb/edit'],'active'=>$this->route=='admin/lb/edit'],
+            ]],
+            ['label' => '医院/机构管理', 'icon' => 'icon-speedometer', 'items' => [
+                ['label' => '医院/机构列表', 'url' => ['/admin/hospital/list']],
+                ['label' => '添加医院/机构', 'icon'=>'fa-plus fa','url' => ['/admin/hospital/edit'],'active'=>$this->route=='admin/hospital/edit'],
+            ]],
+            ['label' => '医生管理', 'icon' => 'icon-speedometer', 'items' => [
+                ['label' => '医生列表', 'url' => ['/admin/doctor/list']],
+                ['label' => '添加医生', 'icon'=>'fa-plus fa','url' => ['/admin/doctor/edit'],'active'=>$this->route=='admin/doctor/edit'],
+            ]],
+            ['label' => '医药销售管理', 'icon' => 'icon-speedometer', 'items' => [
+                ['label' => '医药销售列表', 'url' => ['/admin/staff/list']],
+                ['label' => '添加医药销售', 'icon'=>'fa-plus fa','url' => ['/admin/staff/edit'],'active'=>$this->route=='admin/staff/edit'],
+            ]],
+            
             // ['label'=>'推荐管理','icon'=>'icon-speedometer','url'=>['/admin/recom/list'],'active'=>$this->route=='admin/recom/edit'],
             // ['label'=>'反馈管理','icon'=>'icon-speedometer','url'=>['/admin/report/list'],'active'=>$this->route=='admin/report/edit'],
             ['label'=>'标签管理','icon'=>'icon-speedometer','url'=>['/admin/tag/list'],'active'=>$this->route=='admin/tag/edit'],

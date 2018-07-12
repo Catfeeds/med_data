@@ -7,7 +7,7 @@
 <!-- BEGIN HEAD -->
 <head>
 <meta charset="utf-8"/>
-<title><?php echo $this->pageTitle ?>-经纪圈新房通管理后台</title>
+<title><?php echo $this->pageTitle ?>-常州制药厂病例数据录入系统</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8">
@@ -30,7 +30,7 @@
 <link href="/static/global/css/components.css" id="style_components" rel="stylesheet" type="text/css"/>
 <link href="/static/global/css/plugins.css" rel="stylesheet" type="text/css"/>
 <link href="/static/admin/layout/css/layout.css" rel="stylesheet" type="text/css"/>
-<link href="/static/admin/layout/css/themes/darkblue.css" rel="stylesheet" type="text/css"/>
+<link href="/static/admin/layout/css/themes/grey.css" rel="stylesheet" type="text/css"/>
 <link href="/static/admin/layout/css/custom.css" rel="stylesheet" type="text/css"/>
 <style>
     .help-box{padding:10px 20px;border-top: 1px solid #3d4957; color: #b4bcc8; font-size:14px;}
@@ -61,7 +61,7 @@
 		<!-- BEGIN LOGO -->
 		<div class="page-logo" style="width:500px">
 			<a href="<?php echo $this->createUrl('/vip/common/index') ?>"  class="logo-name">
-			经纪圈新房通管理后台-<?=Yii::app()->user->cname?>
+			常州制药厂病例数据录入系统
 			<!-- <img src="/static/admin/layout/img/logo.png" alt="logo" class="logo-default"/> -->
 			</a>
 			<div class="menu-toggler sidebar-toggler hide">

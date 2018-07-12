@@ -1,12 +1,12 @@
 <?php
-$this->pageTitle = $this->controllerName.'列表';
+$this->pageTitle = '患者列表';
 $this->breadcrumbs = array($this->pageTitle);
 ?>
 <div class="table-toolbar">
     <div class="btn-group pull-left">
         <form class="form-inline">
             <div class="form-group">
-                <?php echo CHtml::dropDownList('type',$type,array('title'=>'标题','name'=>'测定项目'),array('class'=>'form-control','encode'=>false)); ?>
+                <?php echo CHtml::dropDownList('type',$type,array('title'=>'姓名'),array('class'=>'form-control','encode'=>false)); ?>
             </div>
             <div class="form-group">
                 <?php echo CHtml::textField('value',$value,array('class'=>'form-control chose_text')) ?>
@@ -16,53 +16,38 @@ $this->breadcrumbs = array($this->pageTitle);
             </div>
              
             <?php Yii::app()->controller->widget("DaterangepickerWidget",['time'=>$time,'params'=>['class'=>'form-control chose_text']]);?>
-            <div class="form-group">
-                <?php echo CHtml::dropDownList('cate',$cate,CHtml::listData(TagExt::model()->normal()->findAll('cate="jymk"'),'id','name'),array('class'=>'form-control chose_select','encode'=>false,'prompt'=>'--选择检验项目类别--')); ?>
-            </div>
             <button type="submit" class="btn blue">搜索</button>
             <a class="btn yellow" onclick="removeOptions()"><i class="fa fa-trash"></i>&nbsp;清空</a>
         </form>
     </div>
     <div class="pull-right">
-        <a href="<?php echo $this->createAbsoluteUrl('edit') ?>" class="btn blue">
-            添加<?=$this->controllerName?> <i class="fa fa-plus"></i>
+        <a href="<?php echo $this->createAbsoluteUrl('addnew',['pid'=>$pid]) ?>" class="btn blue">
+            添加患者 <i class="fa fa-plus"></i>
         </a>
     </div>
 </div>
-   <table class="table table-bordered table-striped table-condensed flip-content table-hover">
+<table class="table table-bordered table-striped table-condensed flip-content">
     <thead class="flip-content">
-    <tr>
-        <th class="text-center">ID</th>
-        <th class="text-center">测定项目</th>
-        <th class="text-center">单位</th>
-        <th class="text-center">标题</th>
-        <th class="text-center">所属类别</th>
-        <th class="text-center">添加时间</th>
-        <th class="text-center">修改时间</th>
-        <th class="text-center">状态</th>
-        <th class="text-center">操作</th>
-    </tr>
+        <tr>
+            <th class="text-center">姓名</th>
+            <th class="text-center">编号</th>
+            <th class="text-center">创建时间</th>
+            <th class="text-center">修改时间</th>
+            <th class="text-center">操作</th>
+        </tr>
     </thead>
     <tbody>
-    <?php foreach($infos as $k=>$v): ?>
+    <?php foreach($infos as $v): ?>
         <tr>
-            <td style="text-align:center;vertical-align: middle"><?php echo $v->id; ?></td>
-            <td class="text-center"><?=$v->name?></td>
-            <td class="text-center"><?=$v->unit?></td>
-            <td class="text-center"><?=$v->title?></td>
-            <td class="text-center"><?=$v->cname?></td>     
-            <td class="text-center"><?=date('Y-m-d',$v->created)?></td>
-            <td class="text-center"><?=date('Y-m-d',$v->updated)?></td>
-            <td class="text-center"><?php echo CHtml::ajaxLink(UserExt::$status[$v->status],$this->createUrl('changeStatus'), array('type'=>'get', 'data'=>array('id'=>$v->id,'class'=>get_class($v)),'success'=>'function(data){location.reload()}'), array('class'=>'btn btn-sm '.UserExt::$statusStyle[$v->status])); ?></td>
-
-            <td style="text-align:center;vertical-align: middle">
-                <!-- <a href="<?php echo $this->createUrl('edit',array('id'=>$v->id)); ?>" class="btn default btn-xs green"><i class="fa fa-edit"></i> 修改 </a> -->
-                <?php echo CHtml::htmlButton('删除', array('data-toggle'=>'confirmation', 'class'=>'btn btn-xs red', 'data-title'=>'确认删除？', 'data-btn-ok-label'=>'确认', 'data-btn-cancel-label'=>'取消', 'data-popout'=>true,'ajax'=>array('url'=>$this->createUrl('del'),'type'=>'get','success'=>'function(data){location.reload()}','data'=>array('id'=>$v->id,'class'=>get_class($v)))));?>
-
-
+            <td  class="text-center"><?php echo $v->iname ?></td>
+            <td class="text-center"><?php echo $v->ino ?></td>
+            <td class="text-center"><?php echo date('Y-m-d H:i:s',$v->created); ?></td>
+            <td class="text-center"><?php echo date('Y-m-d H:i:s',$v->updated); ?></td>
+            <td  class="text-center">
+                <a href="<?php echo $this->createUrl('edit',array('id'=>$v->id,'pid'=>$pid, 'referrer'=>Yii::app()->request->url)) ?>" class="btn default btn-xs green"><i class="fa fa-edit"></i> 编辑 </a>
             </td>
         </tr>
-    <?php endforeach;?>
+    <?php endforeach; ?>
     </tbody>
 </table>
 <?php $this->widget('VipLinkPager', array('pages'=>$pager)); ?>
@@ -83,7 +68,7 @@ $this->breadcrumbs = array($this->pageTitle);
         });
     }
     function set_sort(_this, id, sort){
-            $.getJSON('<?php echo $this->createUrl('/admin/league/setSort')?>',{id:id,sort:sort,class:'<?=isset($infos[0])?get_class($infos[0]):''?>'},function(dt){
+            $.getJSON('<?php echo $this->createUrl('/admin/plot/setSort')?>',{id:id,sort:sort,class:'<?=isset($infos[0])?get_class($infos[0]):''?>'},function(dt){
                 location.reload();
             });
         }

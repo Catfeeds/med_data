@@ -20,15 +20,24 @@ class VipIdentity extends CUserIdentity
 		// 	$this->setState('username','管理员');
 		// 	$this->setState('avatar','');
 		// 	return $this->errorCode;
-		// } else{
-			if($user = UserExt::model()->normal()->find("is_manage=1 and phone='".$this->username."'") ){
-				if($user->pwd == md5($this->password)) {
+				// } else{
+		if (is_numeric($this->username)) {
+			$user = DoctorExt::model()->find("status=1 and phone='".$this->username."'");
+		} else {
+			$user = DoctorExt::model()->find("status=1 and name='".$this->username."'");
+		}
+
+			if($user){
+				if($user->code == $this->password) {
+					$user->last_login = time();
+					$user->save();
 					$this->errorCode = self::ERROR_NONE;
 					$this->setState('id',$user->id);
 					$this->setState('username',$user->name);
 					$this->setState('avatar','');
-					$this->setState('cid',$user->cid);
-					$this->setState('cname',CompanyExt::model()->findByPk($user->cid)->name);
+					$this->setState('hid',$user->hid);
+					$this->setState('hname',$user->hospital->name);
+					// $this->setState('hid',CompanyExt::model()->findByPk($user->cid)->name);
 					return $this->errorCode;
 				}
 			}

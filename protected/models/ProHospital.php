@@ -1,30 +1,27 @@
 <?php
 
 /**
- * This is the model class for table "basic_tag".
+ * This is the model class for table "pro_hospital".
  *
- * The followings are the available columns in table 'basic_tag':
+ * The followings are the available columns in table 'pro_hospital':
  * @property integer $id
+ * @property integer $pid
+ * @property integer $hid
+ * @property integer $is_major
  * @property string $name
- * @property string $unit
- * @property string $op
- * @property string $title
- * @property integer $cid
- * @property string $cname
- * @property integer $deleted
+ * @property integer $num
  * @property integer $status
- * @property integer $sort
  * @property integer $created
  * @property integer $updated
  */
-class BasicTag extends CActiveRecord
+class ProHospital extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'basic_tag';
+		return 'pro_hospital';
 	}
 
 	/**
@@ -36,11 +33,11 @@ class BasicTag extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('created', 'required'),
-			array('cid, deleted, status, sort, created, updated', 'numerical', 'integerOnly'=>true),
-			array('name, unit, op, title, cname', 'length', 'max'=>100),
+			array('pid, hid, is_major, num, status, created, updated', 'numerical', 'integerOnly'=>true),
+			array('name', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, name, unit, op, title, cid, cname, deleted, status, sort, created, updated', 'safe', 'on'=>'search'),
+			array('id, pid, hid, is_major, name, num, status, created, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -62,15 +59,12 @@ class BasicTag extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
+			'pid' => 'Pid',
+			'hid' => 'Hid',
+			'is_major' => 'Is Major',
 			'name' => 'Name',
-			'unit' => 'Unit',
-			'op' => 'Op',
-			'title' => 'Title',
-			'cid' => 'Cid',
-			'cname' => 'Cname',
-			'deleted' => 'Deleted',
+			'num' => 'Num',
 			'status' => 'Status',
-			'sort' => 'Sort',
 			'created' => 'Created',
 			'updated' => 'Updated',
 		);
@@ -95,15 +89,12 @@ class BasicTag extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
+		$criteria->compare('pid',$this->pid);
+		$criteria->compare('hid',$this->hid);
+		$criteria->compare('is_major',$this->is_major);
 		$criteria->compare('name',$this->name,true);
-		$criteria->compare('unit',$this->unit,true);
-		$criteria->compare('op',$this->op,true);
-		$criteria->compare('title',$this->title,true);
-		$criteria->compare('cid',$this->cid);
-		$criteria->compare('cname',$this->cname,true);
-		$criteria->compare('deleted',$this->deleted);
+		$criteria->compare('num',$this->num);
 		$criteria->compare('status',$this->status);
-		$criteria->compare('sort',$this->sort);
 		$criteria->compare('created',$this->created);
 		$criteria->compare('updated',$this->updated);
 
@@ -116,7 +107,7 @@ class BasicTag extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return BasicTag the static model class
+	 * @return ProHospital the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

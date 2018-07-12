@@ -1,30 +1,28 @@
 <?php
 
 /**
- * This is the model class for table "basic_tag".
+ * This is the model class for table "pro".
  *
- * The followings are the available columns in table 'basic_tag':
+ * The followings are the available columns in table 'pro':
  * @property integer $id
- * @property string $name
- * @property string $unit
- * @property string $op
  * @property string $title
- * @property integer $cid
- * @property string $cname
- * @property integer $deleted
+ * @property integer $num
+ * @property string $url
+ * @property string $data_conf
+ * @property integer $type
+ * @property integer $uid
  * @property integer $status
- * @property integer $sort
  * @property integer $created
  * @property integer $updated
  */
-class BasicTag extends CActiveRecord
+class Pro extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'basic_tag';
+		return 'pro';
 	}
 
 	/**
@@ -36,11 +34,13 @@ class BasicTag extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('created', 'required'),
-			array('cid, deleted, status, sort, created, updated', 'numerical', 'integerOnly'=>true),
-			array('name, unit, op, title, cname', 'length', 'max'=>100),
+			array('num, type, uid, status, created, updated', 'numerical', 'integerOnly'=>true),
+			array('title', 'length', 'max'=>255),
+			array('url', 'length', 'max'=>100),
+			array('data_conf', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, name, unit, op, title, cid, cname, deleted, status, sort, created, updated', 'safe', 'on'=>'search'),
+			array('id, title, num, url, data_conf, type, uid, status, created, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -62,15 +62,13 @@ class BasicTag extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'name' => 'Name',
-			'unit' => 'Unit',
-			'op' => 'Op',
 			'title' => 'Title',
-			'cid' => 'Cid',
-			'cname' => 'Cname',
-			'deleted' => 'Deleted',
+			'num' => 'Num',
+			'url' => 'Url',
+			'data_conf' => 'Data Conf',
+			'type' => 'Type',
+			'uid' => 'Uid',
 			'status' => 'Status',
-			'sort' => 'Sort',
 			'created' => 'Created',
 			'updated' => 'Updated',
 		);
@@ -95,15 +93,13 @@ class BasicTag extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('unit',$this->unit,true);
-		$criteria->compare('op',$this->op,true);
 		$criteria->compare('title',$this->title,true);
-		$criteria->compare('cid',$this->cid);
-		$criteria->compare('cname',$this->cname,true);
-		$criteria->compare('deleted',$this->deleted);
+		$criteria->compare('num',$this->num);
+		$criteria->compare('url',$this->url,true);
+		$criteria->compare('data_conf',$this->data_conf,true);
+		$criteria->compare('type',$this->type);
+		$criteria->compare('uid',$this->uid);
 		$criteria->compare('status',$this->status);
-		$criteria->compare('sort',$this->sort);
 		$criteria->compare('created',$this->created);
 		$criteria->compare('updated',$this->updated);
 
@@ -116,7 +112,7 @@ class BasicTag extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return BasicTag the static model class
+	 * @return Pro the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

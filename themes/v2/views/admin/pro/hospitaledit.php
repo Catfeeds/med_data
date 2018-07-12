@@ -1,6 +1,6 @@
 <?php
-$this->pageTitle = '个人中心';
-$this->breadcrumbs = array( $this->pageTitle);
+$this->pageTitle = '参与机构新建/编辑';
+$this->breadcrumbs = array($this->pageTitle);
 ?>
 <?php $this->widget('ext.ueditor.UeditorWidget',array('id'=>'UserExt_content','options'=>"toolbars:[['fullscreen','source','undo','redo','|','customstyle','paragraph','fontfamily','fontsize'],
         ['bold','italic','underline','fontborder','strikethrough','superscript','subscript','removeformat',
@@ -15,31 +15,38 @@ $this->breadcrumbs = array( $this->pageTitle);
         'print','preview','searchreplace']]")); ?>
 <?php $form = $this->beginWidget('HouseForm', array('htmlOptions' => array('class' => 'form-horizontal'))) ?>
 <div class="form-group">
-    <label class="col-md-2 control-label">名字<span class="required" aria-required="true">*</span></label>
+    <label class="col-md-2 control-label">选择机构</label>
     <div class="col-md-4">
-        <?php echo $form->textField($article, 'name', array('class' => 'form-control')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'name') ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">手机号<span class="required" aria-required="true">*</span></label>
-    <div class="col-md-4">
-        <?php echo $form->textField($article, 'phone', array('class' => 'form-control')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'phone') ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">机构<span class="required" aria-required="true">*</span></label>
-    <div class="col-md-4">
-        <input type="text" class="form-control" value="<?=$this->hospital->name?>" readonly="readonly">
+        <?php echo $form->dropDownList($article, 'hid', CHtml::listData(HospitalExt::model()->findAll(),'id','name'), array('class' => 'form-control select2', 'encode' => false,'empty'=>'请选择')); ?>
     </div>
     <div class="col-md-2"><?php echo $form->error($article, 'hid') ?></div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label">承担例数<span class="required" aria-required="true">*</span></label>
+    <div class="col-md-4">
+        <?php echo $form->textField($article, 'num', array('class' => 'form-control')); ?>
+    </div>
+    <div class="col-md-2"><?php echo $form->error($article, 'num') ?></div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label">身份</label>
+    <div class="col-md-4">
+        <?php echo $form->radioButtonList($article, 'is_major', ['组员','组长'], array('separator' => '')); ?>
+    </div>
+    <div class="col-md-2"><?php echo $form->error($article, 'is_major') ?></div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label">状态</label>
+    <div class="col-md-4">
+        <?php echo $form->radioButtonList($article, 'status', ArticleExt::$status, array('separator' => '')); ?>
+    </div>
+    <div class="col-md-2"><?php echo $form->error($article, 'status') ?></div>
 </div>
 <div class="form-actions">
     <div class="row">
         <div class="col-md-offset-3 col-md-9">
             <button type="submit" class="btn green">保存</button>
-            <?php echo CHtml::link('返回',$this->createUrl('list'), array('class' => 'btn default')) ?>
+            <?php echo CHtml::link('返回',$this->createUrl('hospitallist',['pid'=>$info->id]), array('class' => 'btn default')) ?>
         </div>
     </div>
 </div>
@@ -95,20 +102,20 @@ $js = "
               allowClear: true
            });
 
-				var houses_edit = $('#plot');
-				var data = {};
-				if( houses_edit.length && houses_edit.data('houses') ){
-					data = eval(houses_edit.data('houses'));
-				}
+        var houses_edit = $('#plot');
+        var data = {};
+        if( houses_edit.length && houses_edit.data('houses') ){
+          data = eval(houses_edit.data('houses'));
+        }
 
-				$('#plot').select2({
-					multiple:true,
-					ajax: getHousesAjax,
-					language: 'zh-CN',
-					initSelection: function(element, callback){
-						callback(data);
-					}
-				});
+        $('#plot').select2({
+          multiple:true,
+          ajax: getHousesAjax,
+          language: 'zh-CN',
+          initSelection: function(element, callback){
+            callback(data);
+          }
+        });
 
              $('.form_datetime').datetimepicker({
                  autoclose: true,

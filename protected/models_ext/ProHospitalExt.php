@@ -1,21 +1,22 @@
 <?php 
 /**
- * 相册类
+ * 球员类
  * @author steven.allen <[<email address>]>
- * @date(2017.2.5)
+ * @date(2017.2.12)
  */
-class BasicTagExt extends BasicTag{
+class ProHospitalExt extends ProHospital{
     public static $status = [
-        '已支付','已确认'
+        '禁用','启用'
     ];
 	/**
      * 定义关系
      */
     public function relations()
     {
-        return array(
-            'product'=>array(self::BELONGS_TO, 'UserExt', 'pid'),
-            'tag'=>array(self::BELONGS_TO, 'UserExt', 'cid'),
+         return array(
+            // 'staff'=>array(self::BELONGS_TO, 'StaffExt', 'sid'),
+            'hospital'=>array(self::BELONGS_TO, 'HospitalExt', 'hid'),
+            'pro'=>array(self::BELONGS_TO, 'ProExt', 'pid'),
         );
     }
 
@@ -40,19 +41,24 @@ class BasicTagExt extends BasicTag{
 
     public function afterFind() {
         parent::afterFind();
+        // if(!$this->image){
+        //     $this->image = SiteExt::getAttr('qjpz','productNoPic');
+        // }
     }
 
     public function beforeValidate() {
-        if($this->cid && !$this->cname) {
-            $this->cname = Yii::app()->db->createCommand("select name from tag where id=".$this->cid)->queryScalar();
-        }
-        if($this->name && $this->cname && !$this->op) {
-            $this->op = $this->name.' - '.$this->cname;
-        }
-        if($this->getIsNewRecord())
+        if($this->getIsNewRecord()) {
+
+            // $res = Yii::app()->controller->sendNotice(($this->plot?$this->plot->title:'').'有新举报，举报原因为：'.$this->reason.'，请登陆后台审核','',1);
+            
             $this->created = $this->updated = time();
-        else
+        }
+        else {
+            // if($this->status==1&&Yii::app()->db->createCommand("select status from report where id=".$this->id)->queryScalar()==0) {
+                
+            // }
             $this->updated = time();
+        }
         return parent::beforeValidate();
     }
 
@@ -69,7 +75,7 @@ class BasicTagExt extends BasicTag{
             ),
             'normal' => array(
                 'condition' => "{$alias}.status=1 and {$alias}.deleted=0",
-                'order'=>"{$alias}.updated desc",
+                'order'=>"{$alias}.sort desc,{$alias}.updated desc",
             ),
             'undeleted' => array(
                 'condition' => "{$alias}.deleted=0",
@@ -92,34 +98,9 @@ class BasicTagExt extends BasicTag{
         );
     }
 
-    public function getObj()
+    public function getSf()
     {
-        $model = '';
-        $info = [];
-        switch ($this->type) {
-            case '1':
-                $model = 'ArticleExt';
-                break;
-            case '2':
-                $model = 'CommentExt';
-                break;
-            default:
-                # code...
-                break;
-        }
-        if($model) {
-            $info = $model::model()->findByPk($this->related_id);
-        }
-        return $info;
-    }
-
-    public static function getObjFromCate($cid='',$limit='')
-    {
-        $criteria = new CDbCriteria;
-        $criteria->addCondition('cid=:cid');
-        $criteria->params[':cid'] = $cid;
-        $criteria->limit = $limit;
-        return RecomExt::model()->normal()->findAll($criteria);
+        return $this->is_major?'组长':'组员';
     }
 
 }

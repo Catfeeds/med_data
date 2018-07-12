@@ -9,11 +9,12 @@ class VipController extends Controller
 {
     public $controlleName = '';
 
-    public $company = '';
+    public $hospital = '';
     /**
      * @var string 布局文件路径
      */
     public $layout = '/layouts/base';
+    public $user = '';
 
     /**
      * @var array 当前访问页面的面包屑. 这个值将被赋值给links属性{@link CBreadcrumbs::links}.
@@ -33,8 +34,12 @@ class VipController extends Controller
     public function init()
     {
         parent::init();
-        if(!Yii::app()->user->getIsGuest() && isset(Yii::app()->user->cname))
-            $this->company = CompanyExt::model()->findByPk(Yii::app()->user->cid);
+        if(!Yii::app()->user->getIsGuest()){
+            $this->user = DoctorExt::model()->findByPk(Yii::app()->user->id);
+            $this->hospital = HospitalExt::model()->findByPk(Yii::app()->user->hid);
+
+        }
+
     }
 
     /**
@@ -70,40 +75,12 @@ class VipController extends Controller
      */
     public function getVipMenu()
     {
-        if(Yii::app()->user->id == 1)
-        return [
+         return [
             ['label'=>'管理中心','icon'=>'icon-settings','url'=>'/vip/common/index','active'=>$this->route=='vip/common/index'],
-            ['label' => '项目管理', 'icon' => 'icon-speedometer', 'items' => [
-                ['label' => '项目列表', 'url' => ['/vip/plot/list']],
-                ['label' => '新建项目', 'url' => ['/vip/plot/edit'],'active'=>$this->route=='vip/plot/edit'],
-            ]],
-            ['label'=>'门店管理','icon'=>'icon-speedometer','url'=>['/vip/company/list'],'active'=>$this->route=='vip/company/edit'],
-            ['label'=>'报备管理','icon'=>'icon-speedometer','url'=>['/vip/sub/list'],'active'=>$this->route=='vip/sub/edit'],
-            ['label'=>'接入申请管理','icon'=>'icon-speedometer','url'=>['/vip/plotMarketUser/list'],'active'=>$this->route=='vip/plotMarketUser/edit'],
-            ['label'=>'分销申请管理','icon'=>'icon-speedometer','url'=>['/vip/cooperate/list'],'active'=>$this->route=='vip/cooperate/edit'],
-            ['label'=>'区域管理','icon'=>'icon-speedometer','url'=>['/vip/area/arealist'],'active'=>$this->route=='vip/area/areaedit'],
-            ['label'=>'推荐管理','icon'=>'icon-speedometer','url'=>['/vip/recom/list'],'active'=>$this->route=='vip/recom/edit'],
-            ['label'=>'举报管理','icon'=>'icon-speedometer','url'=>['/vip/report/list'],'active'=>$this->route=='vip/report/edit'],
-            ['label'=>'标签管理','icon'=>'icon-speedometer','url'=>['/vip/tag/list'],'active'=>$this->route=='vip/tag/edit'],
-            ['label'=>'用户管理','icon'=>'icon-speedometer','url'=>['/vip/user/list']],
-            ['label'=>'站点配置','icon'=>'icon-speedometer','url'=>['/vip/site/list'],'active'=>$this->route=='vip/site/edit'||$this->route=='vip/site/list'],
-            // ['label'=>'ahalist','icon'=>'icon-speedometer','url'=>['/vip/aha/list']],
-
-            
+            ['label'=>'数据录入','icon'=>'icon-speedometer','url'=>['/vip/data/list'],'active'=>$this->route=='vip/data/edit'],
+            ['label'=>'个人中心','icon'=>'icon-speedometer','url'=>['/vip/user/edit']],
+            ['label'=>'修改密码','icon'=>'icon-speedometer','url'=>['/vip/user/editpwd']],
         ];
-        else
-           return [
-                ['label'=>'管理中心','icon'=>'icon-settings','url'=>'/vip/common/index','active'=>$this->route=='vip/common/index'],
-                ['label' => '项目管理', 'icon' => 'icon-speedometer', 'items' => [
-                    ['label' => '项目列表', 'url' => ['/vip/plot/list']],
-                    ['label' => '新建项目', 'url' => ['/vip/plot/edit'],'active'=>$this->route=='vip/plot/edit'],
-                ]],
-                ['label'=>'客户管理','icon'=>'icon-speedometer','url'=>['/vip/sub/list'],'active'=>$this->route=='vip/sub/edit'],
-                ['label' => '公司管理', 'icon' => 'icon-speedometer', 'items' => [
-                    ['label' => '人员管理', 'url' => ['/vip/user/list']],
-                    ['label' => '公司管理', 'url' => ['/vip/company/edit?id='.Yii::app()->user->cid],'active'=>$this->route=='vip/company/edit'],
-                ]],
-            ]; 
     } 
 
     /**

@@ -1,6 +1,6 @@
 <?php
-$this->pageTitle = '个人中心';
-$this->breadcrumbs = array( $this->pageTitle);
+$this->pageTitle = $this->controllerName.'新建/编辑';
+$this->breadcrumbs = array($this->controllerName.'管理', $this->pageTitle);
 ?>
 <?php $this->widget('ext.ueditor.UeditorWidget',array('id'=>'UserExt_content','options'=>"toolbars:[['fullscreen','source','undo','redo','|','customstyle','paragraph','fontfamily','fontsize'],
         ['bold','italic','underline','fontborder','strikethrough','superscript','subscript','removeformat',
@@ -15,25 +15,53 @@ $this->breadcrumbs = array( $this->pageTitle);
         'print','preview','searchreplace']]")); ?>
 <?php $form = $this->beginWidget('HouseForm', array('htmlOptions' => array('class' => 'form-horizontal'))) ?>
 <div class="form-group">
-    <label class="col-md-2 control-label">名字<span class="required" aria-required="true">*</span></label>
-    <div class="col-md-4">
-        <?php echo $form->textField($article, 'name', array('class' => 'form-control')); ?>
+    <label class="col-md-2 control-label">名称<span class="required" aria-required="true">*</span></label>
+    <div class="col-md-6">
+        <?php echo $form->textField($article, 'title', array('class' => 'form-control')); ?>
     </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'name') ?></div>
+    <div class="col-md-2"><?php echo $form->error($article, 'title') ?></div>
 </div>
 <div class="form-group">
-    <label class="col-md-2 control-label">手机号<span class="required" aria-required="true">*</span></label>
-    <div class="col-md-4">
-        <?php echo $form->textField($article, 'phone', array('class' => 'form-control')); ?>
+    <label class="col-md-2 control-label">简称<span class="required" aria-required="true">*</span></label>
+    <div class="col-md-6">
+        <?php echo $form->textField($article, 'xmjc', array('class' => 'form-control')); ?>
     </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'phone') ?></div>
+    <div class="col-md-2"><?php echo $form->error($article, 'xmjc') ?></div>
 </div>
 <div class="form-group">
-    <label class="col-md-2 control-label">机构<span class="required" aria-required="true">*</span></label>
-    <div class="col-md-4">
-        <input type="text" class="form-control" value="<?=$this->hospital->name?>" readonly="readonly">
+    <label class="col-md-2 control-label">项目简介<span class="required" aria-required="true">*</span></label>
+    <div class="col-md-6">
+        <?php echo $form->textarea($article, 'xmjj', array('id'=>'UserExt_content')); ?>
     </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'hid') ?></div>
+    <div class="col-md-2"><?php echo $form->error($article, 'xmjj') ?></div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label">随机类型<span class="required" aria-required="true">*</span></label>
+    <div class="col-md-6">
+        <?php echo $form->textField($article, 'sjlx', array('class' => 'form-control')); ?>
+    </div>
+    <div class="col-md-2"><?php echo $form->error($article, 'sjlx') ?></div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label">盲法类型<span class="required" aria-required="true">*</span></label>
+    <div class="col-md-6">
+        <?php echo $form->textField($article, 'mflx', array('class' => 'form-control')); ?>
+    </div>
+    <div class="col-md-2"><?php echo $form->error($article, 'mflx') ?></div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label">总例数<span class="required" aria-required="true">*</span></label>
+    <div class="col-md-6">
+        <?php echo $form->textField($article, 'num', array('class' => 'form-control')); ?>
+    </div>
+    <div class="col-md-2"><?php echo $form->error($article, 'num') ?></div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label">状态</label>
+    <div class="col-md-6">
+        <?php echo $form->radioButtonList($article, 'status', ArticleExt::$status, array('separator' => '')); ?>
+    </div>
+    <div class="col-md-2"><?php echo $form->error($article, 'status') ?></div>
 </div>
 <div class="form-actions">
     <div class="row">
@@ -95,20 +123,20 @@ $js = "
               allowClear: true
            });
 
-				var houses_edit = $('#plot');
-				var data = {};
-				if( houses_edit.length && houses_edit.data('houses') ){
-					data = eval(houses_edit.data('houses'));
-				}
+        var houses_edit = $('#plot');
+        var data = {};
+        if( houses_edit.length && houses_edit.data('houses') ){
+          data = eval(houses_edit.data('houses'));
+        }
 
-				$('#plot').select2({
-					multiple:true,
-					ajax: getHousesAjax,
-					language: 'zh-CN',
-					initSelection: function(element, callback){
-						callback(data);
-					}
-				});
+        $('#plot').select2({
+          multiple:true,
+          ajax: getHousesAjax,
+          language: 'zh-CN',
+          initSelection: function(element, callback){
+            callback(data);
+          }
+        });
 
              $('.form_datetime').datetimepicker({
                  autoclose: true,

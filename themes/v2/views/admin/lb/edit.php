@@ -1,6 +1,6 @@
 <?php
-$this->pageTitle = '个人中心';
-$this->breadcrumbs = array( $this->pageTitle);
+$this->pageTitle = $this->controllerName.'新建/编辑';
+$this->breadcrumbs = array($this->controllerName.'管理', $this->pageTitle);
 ?>
 <?php $this->widget('ext.ueditor.UeditorWidget',array('id'=>'UserExt_content','options'=>"toolbars:[['fullscreen','source','undo','redo','|','customstyle','paragraph','fontfamily','fontsize'],
         ['bold','italic','underline','fontborder','strikethrough','superscript','subscript','removeformat',
@@ -22,18 +22,11 @@ $this->breadcrumbs = array( $this->pageTitle);
     <div class="col-md-2"><?php echo $form->error($article, 'name') ?></div>
 </div>
 <div class="form-group">
-    <label class="col-md-2 control-label">手机号<span class="required" aria-required="true">*</span></label>
+    <label class="col-md-2 control-label">简介<span class="required" aria-required="true">*</span></label>
     <div class="col-md-4">
-        <?php echo $form->textField($article, 'phone', array('class' => 'form-control')); ?>
+        <?php echo $form->textarea($article, 'descp', array('class' => 'form-control')); ?>
     </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'phone') ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">机构<span class="required" aria-required="true">*</span></label>
-    <div class="col-md-4">
-        <input type="text" class="form-control" value="<?=$this->hospital->name?>" readonly="readonly">
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'hid') ?></div>
+    <div class="col-md-2"><?php echo $form->error($article, 'descp') ?></div>
 </div>
 <div class="form-actions">
     <div class="row">
@@ -95,20 +88,20 @@ $js = "
               allowClear: true
            });
 
-				var houses_edit = $('#plot');
-				var data = {};
-				if( houses_edit.length && houses_edit.data('houses') ){
-					data = eval(houses_edit.data('houses'));
-				}
+        var houses_edit = $('#plot');
+        var data = {};
+        if( houses_edit.length && houses_edit.data('houses') ){
+          data = eval(houses_edit.data('houses'));
+        }
 
-				$('#plot').select2({
-					multiple:true,
-					ajax: getHousesAjax,
-					language: 'zh-CN',
-					initSelection: function(element, callback){
-						callback(data);
-					}
-				});
+        $('#plot').select2({
+          multiple:true,
+          ajax: getHousesAjax,
+          language: 'zh-CN',
+          initSelection: function(element, callback){
+            callback(data);
+          }
+        });
 
              $('.form_datetime').datetimepicker({
                  autoclose: true,
