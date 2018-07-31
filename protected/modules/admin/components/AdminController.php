@@ -69,7 +69,15 @@ class AdminController extends Controller
                 ['label' => '项目列表', 'url' => ['/admin/pro/list']],
                 ['label' => '添加项目', 'icon'=>'fa-plus fa','url' => ['/admin/pro/edit'],'active'=>$this->route=='admin/pro/edit'],
             ]],
-            ['label'=>'数据管理','icon'=>'icon-speedometer','url'=>['/admin/data/list'],'active'=>$this->route=='admin/data/edit'],
+            ['label' => '病例管理', 'icon' => 'icon-speedometer', 'items' => [
+                ['label' => '病例列表', 'url' => ['/admin/case/list']],
+                ['label' => '添加病例', 'icon'=>'fa-plus fa','url' => ['/admin/case/edit'],'active'=>$this->route=='admin/case/edit'],
+            ]],
+            ['label' => '数据管理', 'icon' => 'icon-speedometer', 'items' => [
+                ['label' => '项目数据管理', 'url' => ['/admin/ill/list']],
+                ['label' => '病例数据管理', 'url' => ['/admin/case_ill/list']],
+            ]],
+            ['label'=>'数据统计','icon'=>'icon-speedometer','url'=>['/admin/count/list'],'active'=>$this->route=='admin/count/edit'],
             ['label' => '病例标签库管理', 'icon' => 'icon-speedometer', 'items' => [
                 ['label' => '标签列表', 'url' => ['/admin/basicTag/list']],
                 ['label' => '添加标签', 'icon'=>'fa-plus fa','url' => ['/admin/basicTag/edit'],'active'=>$this->route=='admin/basicTag/edit'],

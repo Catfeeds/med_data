@@ -14,13 +14,93 @@ class DataExt extends Data{
     public function relations()
     {
          return array(
-            // 'staff'=>array(self::BELONGS_TO, 'StaffExt', 'sid'),
+            'tag'=>array(self::BELONGS_TO, 'ProCateTagExt', 'ptid'),
             'period'=>array(self::BELONGS_TO, 'ProPeriodExt', 'ppid'),
             'hospital'=>array(self::BELONGS_TO, 'HospitalExt', 'hid'),
             'staff'=>array(self::BELONGS_TO, 'StaffExt', 'sid'),
             'doctor'=>array(self::BELONGS_TO, 'DoctorExt', 'did'),
             'pro'=>array(self::BELONGS_TO, 'ProExt', 'pid'),
+            'ill'=>array(self::BELONGS_TO, 'IllExt', 'iid'),
+            'lid'=>array(self::BELONGS_TO, 'LbExt', 'lid'),
         );
+    }
+    public static $tags = [
+        // 选项名
+        // 选项值
+        // 选项加权
+        'v1'=>'',
+            // 选项名
+        // 选项值
+        // 选项加权
+        'v2'=>'',
+            // 选项名
+        // 选项值
+        // 选项加权
+        'v3'=>'',
+            // 选项名
+        // 选项值
+        // 选项加权
+        'v4'=>'',
+            // 选项名
+        // 选项值
+        // 选项加权
+        'v5'=>'',
+            // 选项名
+        // 选项值
+        // 选项加权
+        'v6'=>'',
+            // 选项名
+        // 选项值
+        // 选项加权
+        'v7'=>'',
+            // 选项名
+        // 选项值
+        // 选项加权
+        'v8'=>'',
+            // 选项名
+        // 选项值
+        // 选项加权
+        'v9'=>'',
+            // 选项名
+        // 选项值
+        // 选项加权
+        'v10'=>'',
+    ];
+
+    public function __set($name='',$value='')
+    {
+        // var_dump($name);
+       if (isset(self::$tags[$name])){
+            if(is_array($this->data_conf))
+                $data_conf = $this->data_conf;
+            else
+                $data_conf = CJSON::decode($this->data_conf);
+            self::$tags[$name] = $value;
+            $data_conf[$name] = $value;
+            // var_dump(1);exit;
+            $this->data_conf = json_encode($data_conf);
+        }
+        else
+            parent::__set($name, $value);
+    }
+
+    public function __get($name='')
+    {
+        if (isset(self::$tags[$name])) {
+            if(is_array($this->data_conf))
+                $data_conf = $this->data_conf;
+            else
+                $data_conf = CJSON::decode($this->data_conf);
+
+            if(!isset($data_conf[$name]))
+                $value = self::$tags[$name];
+            else
+                $value = self::$tags[$name] ? self::$tags[$name] : $data_conf[$name];
+
+            return $value;
+        } else{
+            return parent::__get($name);
+        }
     }
 
     /**
@@ -29,6 +109,7 @@ class DataExt extends Data{
     public function rules() {
         $rules = parent::rules();
         return array_merge($rules, array(
+             array(implode(',',array_keys(self::$tags)), 'safe'),
             // array('name', 'unique', 'message'=>'{attribute}已存在')
         ));
     }
@@ -50,6 +131,10 @@ class DataExt extends Data{
     }
 
     public function beforeValidate() {
+        
+        if($this->did && !$this->hid) {
+            $this->hid = $this->doctor->hid;
+        }
         if($this->getIsNewRecord()) {
 
             // $res = Yii::app()->controller->sendNotice(($this->plot?$this->plot->title:'').'有新举报，举报原因为：'.$this->reason.'，请登陆后台审核','',1);

@@ -1,39 +1,27 @@
 <?php
 
 /**
- * This is the model class for table "data".
+ * This is the model class for table "case_hospital".
  *
- * The followings are the available columns in table 'data':
+ * The followings are the available columns in table 'case_hospital':
  * @property integer $id
  * @property integer $pid
- * @property integer $ppid
- * @property integer $pmid
- * @property integer $sid
- * @property integer $did
  * @property integer $hid
- * @property integer $lid
- * @property integer $ptid
- * @property integer $iid
- * @property integer $is_tag
- * @property string $iname
- * @property integer $ino
- * @property integer $time
- * @property string $data_conf
- * @property string $nci
- * @property string $lcyy
- * @property string $note
- * @property string $data
+ * @property integer $is_major
+ * @property string $name
+ * @property integer $num
+ * @property integer $status
  * @property integer $created
  * @property integer $updated
  */
-class Data extends CActiveRecord
+class CaseHospital extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'data';
+		return 'case_hospital';
 	}
 
 	/**
@@ -44,13 +32,12 @@ class Data extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('iid, created', 'required'),
-			array('pid, ppid, pmid, sid, did, hid, lid, ptid, iid, is_tag, ino, time, created, updated', 'numerical', 'integerOnly'=>true),
-			array('iname, nci, lcyy, note, data', 'length', 'max'=>100),
-			array('data_conf', 'safe'),
+			array('created', 'required'),
+			array('pid, hid, is_major, num, status, created, updated', 'numerical', 'integerOnly'=>true),
+			array('name', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, pid, ppid, pmid, sid, did, hid, lid, ptid, iid, is_tag, iname, ino, time, data_conf, nci, lcyy, note, data, created, updated', 'safe', 'on'=>'search'),
+			array('id, pid, hid, is_major, name, num, status, created, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -73,23 +60,11 @@ class Data extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'pid' => 'Pid',
-			'ppid' => 'Ppid',
-			'pmid' => 'Pmid',
-			'sid' => 'Sid',
-			'did' => 'Did',
 			'hid' => 'Hid',
-			'lid' => 'Lid',
-			'ptid' => 'Ptid',
-			'iid' => 'Iid',
-			'is_tag' => 'Is Tag',
-			'iname' => 'Iname',
-			'ino' => 'Ino',
-			'time' => 'Time',
-			'data_conf' => 'Data Conf',
-			'nci' => 'Nci',
-			'lcyy' => 'Lcyy',
-			'note' => 'Note',
-			'data' => 'Data',
+			'is_major' => 'Is Major',
+			'name' => 'Name',
+			'num' => 'Num',
+			'status' => 'Status',
 			'created' => 'Created',
 			'updated' => 'Updated',
 		);
@@ -115,23 +90,11 @@ class Data extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('pid',$this->pid);
-		$criteria->compare('ppid',$this->ppid);
-		$criteria->compare('pmid',$this->pmid);
-		$criteria->compare('sid',$this->sid);
-		$criteria->compare('did',$this->did);
 		$criteria->compare('hid',$this->hid);
-		$criteria->compare('lid',$this->lid);
-		$criteria->compare('ptid',$this->ptid);
-		$criteria->compare('iid',$this->iid);
-		$criteria->compare('is_tag',$this->is_tag);
-		$criteria->compare('iname',$this->iname,true);
-		$criteria->compare('ino',$this->ino);
-		$criteria->compare('time',$this->time);
-		$criteria->compare('data_conf',$this->data_conf,true);
-		$criteria->compare('nci',$this->nci,true);
-		$criteria->compare('lcyy',$this->lcyy,true);
-		$criteria->compare('note',$this->note,true);
-		$criteria->compare('data',$this->data,true);
+		$criteria->compare('is_major',$this->is_major);
+		$criteria->compare('name',$this->name,true);
+		$criteria->compare('num',$this->num);
+		$criteria->compare('status',$this->status);
 		$criteria->compare('created',$this->created);
 		$criteria->compare('updated',$this->updated);
 
@@ -144,7 +107,7 @@ class Data extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Data the static model class
+	 * @return CaseHospital the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

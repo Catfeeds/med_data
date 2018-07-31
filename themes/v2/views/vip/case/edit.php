@@ -1,6 +1,6 @@
 <?php
-$this->pageTitle = '模块新建/编辑';
-$this->breadcrumbs = array($this->pageTitle);
+$this->pageTitle = $this->controllerName.'新建/编辑';
+$this->breadcrumbs = array($this->controllerName.'管理', $this->pageTitle);
 ?>
 <?php $this->widget('ext.ueditor.UeditorWidget',array('id'=>'UserExt_content','options'=>"toolbars:[['fullscreen','source','undo','redo','|','customstyle','paragraph','fontfamily','fontsize'],
         ['bold','italic','underline','fontborder','strikethrough','superscript','subscript','removeformat',
@@ -15,31 +15,51 @@ $this->breadcrumbs = array($this->pageTitle);
         'print','preview','searchreplace']]")); ?>
 <?php $form = $this->beginWidget('HouseForm', array('htmlOptions' => array('class' => 'form-horizontal'))) ?>
 <div class="form-group">
-    <label class="col-md-2 control-label">选择阶段<span class="required" aria-required="true">*</span></label>
-    <div class="col-md-4">
-         <?php echo $form->dropDownList($article, 'ppid', CHtml::listData(ProPeriodExt::model()->findAll('pid='.$pid),'id','name'), array('class' => 'form-control select2', 'encode' => false,'empty'=>'请选择')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'ppid') ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">模块名<span class="required" aria-required="true">*</span></label>
+    <label class="col-md-2 control-label">患者姓名</label>
     <div class="col-md-4">
         <?php echo $form->textField($article, 'name', array('class' => 'form-control')); ?>
     </div>
     <div class="col-md-2"><?php echo $form->error($article, 'name') ?></div>
 </div>
 <div class="form-group">
-    <label class="col-md-2 control-label">选择量表<span class="required" aria-required="true">*</span></label>
+    <label class="col-md-2 control-label">患者联系方式</label>
     <div class="col-md-4">
-        <?php echo $form->dropDownList($article, 'lid', CHtml::listData(LbExt::model()->findAll(),'id','name'),array('class' => 'form-control','empty'=>'请选择')); ?>
+        <?php echo $form->textField($article, 'phone', array('class' => 'form-control')); ?>
     </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'lid') ?></div>
+    <div class="col-md-2"><?php echo $form->error($article, 'phone') ?></div>
 </div>
+<div class="form-group">
+    <label class="col-md-2 control-label">患者地址</label>
+    <div class="col-md-4">
+        <?php echo $form->textField($article, 'addr', array('class' => 'form-control')); ?>
+    </div>
+    <div class="col-md-2"><?php echo $form->error($article, 'addr') ?></div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label">性别</label>
+    <div class="col-md-4">
+        <?php echo $form->radioButtonList($article, 'sex', ['1'=>'男','2'=>'女'], array('separator' => '')); ?>
+    </div>
+    <div class="col-md-2"><?php echo $form->error($article, 'sex') ?></div>
+</div>
+<div class="form-group">
+      <label class="col-md-2 control-label text-nowrap">附件图</label>
+      <div class="col-md-4">
+          <div id="uploader" class="wu-example">
+              <div class="btns">
+                  <!--<div id="cover_img">选择文件</div>-->
+                  <?php $this->widget('FileUpload',array('model'=>$article,'attribute'=>'image','inputName'=>'image','width'=>'300','removeCallback'=>"$('#image').html('')")); ?>
+              </div>
+          </div>
+          <div id="singlePicyw1"></div>
+      </div>
+      <div class="col-md-12"><?php echo $form->error($article, 'image'); ?></div>
+  </div>
 <div class="form-actions">
     <div class="row">
         <div class="col-md-offset-3 col-md-9">
             <button type="submit" class="btn green">保存</button>
-            <?php echo CHtml::link('返回',$this->createUrl('modulelist',['pid'=>$pid]), array('class' => 'btn default')) ?>
+            <?php echo CHtml::link('返回',$this->createUrl('list'), array('class' => 'btn default')) ?>
         </div>
     </div>
 </div>

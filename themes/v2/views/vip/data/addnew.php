@@ -12,16 +12,37 @@ $this->breadcrumbs = array( $this->pageTitle);
 <div class="form-group">
     <label class="col-md-2 control-label">患者名字<span class="required" aria-required="true">*</span></label>
     <div class="col-md-4">
-        <?php echo $form->textField($article, 'iname', array('class' => 'form-control')); ?>
+        <?php echo $form->textField($article, 'name', array('class' => 'form-control')); ?>
     </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'iname') ?></div>
+    <div class="col-md-2"><?php echo $form->error($article, 'name') ?></div>
 </div>
 <div class="form-group">
     <label class="col-md-2 control-label">患者编号<span class="required" aria-required="true">*</span></label>
     <div class="col-md-4">
-        <?php echo $form->textField($article, 'ino', array('class' => 'form-control')); ?>
+        <?php echo $form->textField($article, 'no', array('class' => 'form-control')); ?>
     </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'ino') ?></div>
+    <div class="col-md-2"><?php echo $form->error($article, 'no') ?></div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label">患者出生年份</label>
+    <div class="col-md-4">
+        <?php echo $form->textField($article, 'birth', array('class' => 'form-control')); ?>
+    </div>
+    <div class="col-md-2"><?php echo $form->error($article, 'birth') ?></div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label">患者联系方式</label>
+    <div class="col-md-4">
+        <?php echo $form->textField($article, 'phone', array('class' => 'form-control')); ?>
+    </div>
+    <div class="col-md-2"><?php echo $form->error($article, 'phone') ?></div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label">患者地址</label>
+    <div class="col-md-4">
+        <?php echo $form->textField($article, 'addr', array('class' => 'form-control')); ?>
+    </div>
+    <div class="col-md-2"><?php echo $form->error($article, 'addr') ?></div>
 </div>
 <div class="form-actions">
     <div class="row">

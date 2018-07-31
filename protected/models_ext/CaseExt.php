@@ -4,7 +4,7 @@
  * @author steven.allen <[<email address>]>
  * @date(2017.2.12)
  */
-class ProExt extends Pro{
+class CaseExt extends Casee{
     public static $status = [
         '禁用','启用'
     ];
@@ -17,8 +17,8 @@ class ProExt extends Pro{
             // 'staff'=>array(self::BELONGS_TO, 'StaffExt', 'sid'),
             // 'doctor'=>array(self::BELONGS_TO, 'DoctorExt', 'did'),
             'periods'=>array(self::HAS_MANY, 'ProPeriodExt', 'pid'),
-            'hospital_num'=>array(self::STAT, 'ProHospitalExt', 'pid'),
-            'hospitals'=>array(self::MANY_MANY, 'HospitalExt', 'pro_hospital(pid,hid)'),
+            'hospital_num'=>array(self::STAT, 'CaseHospitalExt', 'pid'),
+            'hospitals'=>array(self::MANY_MANY, 'HospitalExt', 'case_hospital(pid,hid)'),
             'period_num'=>array(self::STAT, 'ProPeriodExt', 'pid'),
             'module_num'=>array(self::STAT, 'ProCateExt', 'pid'),
             'data_num'=>array(self::STAT, 'DataExt', 'pid'),
@@ -28,11 +28,87 @@ class ProExt extends Pro{
         );
     }
 
-    public static $tags = [
-    'sjlx'=>'',
-    'mflx'=>'',
-    'xmjc'=>'',
-    'xmjj'=>''
+   public static $tags = [
+        // 选项名
+        'n1'=>'',
+        // 选项值
+        'o1'=>'',
+        // 选项加权
+        's1'=>'',
+        't1'=>'',
+        'l1'=>'',
+            // 选项名
+        'n2'=>'',
+        // 选项值
+        'o2'=>'',
+        // 选项加权
+        's2'=>'',
+        't2'=>'',
+        'l2'=>'',
+            // 选项名
+        'n3'=>'',
+        // 选项值
+        'o3'=>'',
+        // 选项加权
+        's3'=>'',
+        't3'=>'',
+        'l3'=>'',
+            // 选项名
+        'n4'=>'',
+        // 选项值
+        'o4'=>'',
+        // 选项加权
+        's4'=>'',
+        't4'=>'',
+        'l4'=>'',
+            // 选项名
+        'n5'=>'',
+        // 选项值
+        'o5'=>'',
+        // 选项加权
+        's5'=>'',
+        't5'=>'',
+        'l5'=>'',
+            // 选项名
+        'n6'=>'',
+        // 选项值
+        'o6'=>'',
+        // 选项加权
+        's6'=>'',
+        't6'=>'',
+        'l6'=>'',
+            // 选项名
+        'n7'=>'',
+        // 选项值
+        'o7'=>'',
+        // 选项加权
+        's7'=>'',
+        't7'=>'',
+        'l7'=>'',
+            // 选项名
+        'n8'=>'',
+        // 选项值
+        'o8'=>'',
+        // 选项加权
+        's8'=>'',
+        't8'=>'',
+        'l8'=>'',
+            // 选项名
+        'n9'=>'',
+        // 选项值
+        'o9'=>'',
+        // 选项加权
+        's9'=>'',
+        't9'=>'',
+        'l9'=>'',
+            // 选项名
+        'n10'=>'',
+        // 选项值
+        'o10'=>'',
+        // 选项加权
+        's10'=>'',
+        't10'=>'',
+        'l10'=>'',
     ];
 
     public function __set($name='',$value='')

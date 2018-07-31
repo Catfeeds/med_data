@@ -1,39 +1,31 @@
 <?php
 
 /**
- * This is the model class for table "data".
+ * This is the model class for table "case_data".
  *
- * The followings are the available columns in table 'data':
+ * The followings are the available columns in table 'case_data':
  * @property integer $id
- * @property integer $pid
- * @property integer $ppid
- * @property integer $pmid
- * @property integer $sid
+ * @property integer $cid
  * @property integer $did
  * @property integer $hid
- * @property integer $lid
- * @property integer $ptid
- * @property integer $iid
- * @property integer $is_tag
- * @property string $iname
- * @property integer $ino
- * @property integer $time
+ * @property string $image
  * @property string $data_conf
- * @property string $nci
- * @property string $lcyy
- * @property string $note
- * @property string $data
+ * @property string $name
+ * @property string $addr
+ * @property string $phone
+ * @property string $birth
+ * @property integer $sex
  * @property integer $created
  * @property integer $updated
  */
-class Data extends CActiveRecord
+class CaseData extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'data';
+		return 'case_data';
 	}
 
 	/**
@@ -44,13 +36,16 @@ class Data extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('iid, created', 'required'),
-			array('pid, ppid, pmid, sid, did, hid, lid, ptid, iid, is_tag, ino, time, created, updated', 'numerical', 'integerOnly'=>true),
-			array('iname, nci, lcyy, note, data', 'length', 'max'=>100),
+			array('created', 'required'),
+			array('cid, did, hid, sex, created, updated', 'numerical', 'integerOnly'=>true),
+			array('image', 'length', 'max'=>255),
+			array('name, addr', 'length', 'max'=>100),
+			array('phone', 'length', 'max'=>20),
+			array('birth', 'length', 'max'=>10),
 			array('data_conf', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, pid, ppid, pmid, sid, did, hid, lid, ptid, iid, is_tag, iname, ino, time, data_conf, nci, lcyy, note, data, created, updated', 'safe', 'on'=>'search'),
+			array('id, cid, did, hid, image, data_conf, name, addr, phone, birth, sex, created, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -72,24 +67,16 @@ class Data extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'pid' => 'Pid',
-			'ppid' => 'Ppid',
-			'pmid' => 'Pmid',
-			'sid' => 'Sid',
+			'cid' => 'Cid',
 			'did' => 'Did',
 			'hid' => 'Hid',
-			'lid' => 'Lid',
-			'ptid' => 'Ptid',
-			'iid' => 'Iid',
-			'is_tag' => 'Is Tag',
-			'iname' => 'Iname',
-			'ino' => 'Ino',
-			'time' => 'Time',
+			'image' => 'Image',
 			'data_conf' => 'Data Conf',
-			'nci' => 'Nci',
-			'lcyy' => 'Lcyy',
-			'note' => 'Note',
-			'data' => 'Data',
+			'name' => 'Name',
+			'addr' => 'Addr',
+			'phone' => 'Phone',
+			'birth' => 'Birth',
+			'sex' => 'Sex',
 			'created' => 'Created',
 			'updated' => 'Updated',
 		);
@@ -114,24 +101,16 @@ class Data extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('pid',$this->pid);
-		$criteria->compare('ppid',$this->ppid);
-		$criteria->compare('pmid',$this->pmid);
-		$criteria->compare('sid',$this->sid);
+		$criteria->compare('cid',$this->cid);
 		$criteria->compare('did',$this->did);
 		$criteria->compare('hid',$this->hid);
-		$criteria->compare('lid',$this->lid);
-		$criteria->compare('ptid',$this->ptid);
-		$criteria->compare('iid',$this->iid);
-		$criteria->compare('is_tag',$this->is_tag);
-		$criteria->compare('iname',$this->iname,true);
-		$criteria->compare('ino',$this->ino);
-		$criteria->compare('time',$this->time);
+		$criteria->compare('image',$this->image,true);
 		$criteria->compare('data_conf',$this->data_conf,true);
-		$criteria->compare('nci',$this->nci,true);
-		$criteria->compare('lcyy',$this->lcyy,true);
-		$criteria->compare('note',$this->note,true);
-		$criteria->compare('data',$this->data,true);
+		$criteria->compare('name',$this->name,true);
+		$criteria->compare('addr',$this->addr,true);
+		$criteria->compare('phone',$this->phone,true);
+		$criteria->compare('birth',$this->birth,true);
+		$criteria->compare('sex',$this->sex);
 		$criteria->compare('created',$this->created);
 		$criteria->compare('updated',$this->updated);
 
@@ -144,7 +123,7 @@ class Data extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Data the static model class
+	 * @return CaseData the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

@@ -8,6 +8,11 @@
  * @property string $title
  * @property integer $num
  * @property string $url
+ * @property string $kw
+ * @property string $sjzzs
+ * @property string $dis
+ * @property integer $area
+ * @property integer $ks
  * @property string $data_conf
  * @property integer $type
  * @property integer $uid
@@ -34,13 +39,13 @@ class Pro extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('created', 'required'),
-			array('num, type, uid, status, created, updated', 'numerical', 'integerOnly'=>true),
-			array('title', 'length', 'max'=>255),
-			array('url', 'length', 'max'=>100),
+			array('num, area, ks, type, uid, status, created, updated', 'numerical', 'integerOnly'=>true),
+			array('title, kw', 'length', 'max'=>255),
+			array('url, sjzzs, dis', 'length', 'max'=>100),
 			array('data_conf', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, title, num, url, data_conf, type, uid, status, created, updated', 'safe', 'on'=>'search'),
+			array('id, title, num, url, kw, sjzzs, dis, area, ks, data_conf, type, uid, status, created, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -65,6 +70,11 @@ class Pro extends CActiveRecord
 			'title' => 'Title',
 			'num' => 'Num',
 			'url' => 'Url',
+			'kw' => 'Kw',
+			'sjzzs' => 'Sjzzs',
+			'dis' => 'Dis',
+			'area' => 'Area',
+			'ks' => 'Ks',
 			'data_conf' => 'Data Conf',
 			'type' => 'Type',
 			'uid' => 'Uid',
@@ -96,6 +106,11 @@ class Pro extends CActiveRecord
 		$criteria->compare('title',$this->title,true);
 		$criteria->compare('num',$this->num);
 		$criteria->compare('url',$this->url,true);
+		$criteria->compare('kw',$this->kw,true);
+		$criteria->compare('sjzzs',$this->sjzzs,true);
+		$criteria->compare('dis',$this->dis,true);
+		$criteria->compare('area',$this->area);
+		$criteria->compare('ks',$this->ks);
 		$criteria->compare('data_conf',$this->data_conf,true);
 		$criteria->compare('type',$this->type);
 		$criteria->compare('uid',$this->uid);

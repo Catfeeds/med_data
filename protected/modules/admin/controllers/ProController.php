@@ -19,14 +19,18 @@ class ProController extends AdminController{
 		// $this->cates = CHtml::listData(LeagueExt::model()->normal()->findAll(),'id','name');
 		// $this->cates1 = CHtml::listData(TeamExt::model()->normal()->findAll(),'id','name');
 	}
-	public function actionList($type='title',$value='',$time_type='created',$time='',$cate='',$cate1='')
+	public function actionList($type='title',$value='',$time_type='created',$time='',$cate='',$cate1='',$ks='',$area='')
 	{
 		$modelName = $this->modelName;
 		$criteria = new CDbCriteria;
 		if($value = trim($value))
             if ($type=='title') {
                 $criteria->addSearchCondition('name', $value);
-            } 
+            } elseif ($type=='dis') {
+            	$criteria->addSearchCondition('dis', $value);
+            } elseif ($type='kw') {
+            	$criteria->addSearchCondition('kw', $value);
+            }
         //添加时间、刷新时间筛选
         if($time_type!='' && $time!='')
         {
@@ -43,12 +47,20 @@ class ProController extends AdminController{
 			$criteria->addCondition('lid=:cid');
 			$criteria->params[':cid'] = $cate;
 		}
+		if($ks) {
+			$criteria->addCondition('ks=:ks');
+			$criteria->params[':ks'] = $ks;
+		}
+		if($area) {
+			$criteria->addCondition('area=:area');
+			$criteria->params[':area'] = $area;
+		}
 		if($cate1) {
 			$criteria->addCondition('tid=:cid');
 			$criteria->params[':cid'] = $cate1;
 		}
 		$infos = $modelName::model()->getList($criteria,20);
-		$this->render('list',['cate'=>$cate,'cate1'=>$cate1,'infos'=>$infos->data,'cates'=>$this->cates,'cates1'=>$this->cates1,'pager'=>$infos->pagination,'type' => $type,'value' => $value,'time' => $time,'time_type' => $time_type,]);
+		$this->render('list',['cate'=>$cate,'cate1'=>$cate1,'infos'=>$infos->data,'cates'=>$this->cates,'cates1'=>$this->cates1,'pager'=>$infos->pagination,'type' => $type,'value' => $value,'time' => $time,'time_type' => $time_type,'ks'=>$ks,'area'=>$area]);
 	}
 
 	public function actionEdit($id='')
@@ -226,18 +238,21 @@ class ProController extends AdminController{
 							$newobj->attributes = $pras;
 							$newobj->ppid = $info->id;
 							if($newobj->save()) {
+								$sql = $sql = "insert into pro_cate_tag(`name`,pid,type,tid,data_conf,sort,created,updated)  select name,pid,type,tid,data_conf,sort,created,updated from pro_cate_tag where pcid=".$value->id;
 								// 插入内容
-								$tagsold = Yii::app()->db->createCommand("select name,pid,type,ppid,pcid,tid,data_conf,sort from pro_cate_tag where pcid=".$value->id)->queryAll();
-								if($tagsold) {
-									$t = time();
-									$sql = "insert into pro_cate_tag(`name`,pid,type,ppid,pcid,tid,data_conf,sort,created,updated) values ";
-									foreach ($tagsold as $k=>$to) {
-										$dh = $k==0?'':',';
-										$sql .= ("$dh('".$to['name']."',".$to['pid'].",".$to['type'].",".$info->id.",".$newobj->id.",".$to['tid'].",'".$to['data_conf']."',".$to['sort'].",".$t.",".$t.")");
-									}
+								// $tagsold = Yii::app()->db->createCommand("select name,pid,type,ppid,pcid,tid,data_conf,sort from pro_cate_tag where pcid=".$value->id)->queryAll();
+								// if($tagsold) {
+								// 	$t = time();
+								// 	$sql = "insert into pro_cate_tag(`name`,pid,type,ppid,pcid,tid,data_conf,sort,created,updated) values ";
+								// 	foreach ($tagsold as $k=>$to) {
+								// 		$dh = $k==0?'':',';
+								// 		$sql .= ("$dh('".$to['name']."',".$to['pid'].",".$to['type'].",".$info->id.",".$newobj->id.",".$to['tid'].",'".$to['data_conf']."',".$to['sort'].",".$t.",".$t.")");
+								// 	}
 									$sql  = $sql.';';
 									Yii::app()->db->createCommand($sql)->execute();
-								}
+									Yii::app()->db->createCommand("update pro_cate_tag set ppid=$info->id where ppid=0")->execute();
+									Yii::app()->db->createCommand("update pro_cate_tag set pcid=$newobj->id where pcid=0")->execute();
+								// }
 							}
 						}
 					}

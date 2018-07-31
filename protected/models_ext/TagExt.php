@@ -15,6 +15,8 @@ class TagExt extends Tag
         'direct' => [
             // 'tab' => 'tab分类',
             'jymk' => '检验模块',
+            'ks' => '科室标签',
+            'area' => '区域标签',
         ],
         //区间式标签，区间式标签可以增删
         'range' => [

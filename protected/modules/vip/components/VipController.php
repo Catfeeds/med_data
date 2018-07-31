@@ -77,7 +77,8 @@ class VipController extends Controller
     {
          return [
             ['label'=>'管理中心','icon'=>'icon-settings','url'=>'/vip/common/index','active'=>$this->route=='vip/common/index'],
-            ['label'=>'数据录入','icon'=>'icon-speedometer','url'=>['/vip/data/list'],'active'=>$this->route=='vip/data/edit'],
+            ['label'=>'项目数据录入','icon'=>'icon-speedometer','url'=>['/vip/data/list'],'active'=>$this->route=='vip/data/edit'],
+            ['label'=>'病例录入','icon'=>'icon-speedometer','url'=>['/vip/case/list'],'active'=>$this->route=='vip/case/edit'],
             ['label'=>'个人中心','icon'=>'icon-speedometer','url'=>['/vip/user/edit']],
             ['label'=>'修改密码','icon'=>'icon-speedometer','url'=>['/vip/user/editpwd']],
         ];

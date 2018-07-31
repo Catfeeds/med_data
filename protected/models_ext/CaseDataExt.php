@@ -4,7 +4,7 @@
  * @author steven.allen <[<email address>]>
  * @date(2017.2.12)
  */
-class ProExt extends Pro{
+class CaseDataExt extends CaseData{
     public static $status = [
         '禁用','启用'
     ];
@@ -14,25 +14,57 @@ class ProExt extends Pro{
     public function relations()
     {
          return array(
-            // 'staff'=>array(self::BELONGS_TO, 'StaffExt', 'sid'),
-            // 'doctor'=>array(self::BELONGS_TO, 'DoctorExt', 'did'),
-            'periods'=>array(self::HAS_MANY, 'ProPeriodExt', 'pid'),
-            'hospital_num'=>array(self::STAT, 'ProHospitalExt', 'pid'),
-            'hospitals'=>array(self::MANY_MANY, 'HospitalExt', 'pro_hospital(pid,hid)'),
-            'period_num'=>array(self::STAT, 'ProPeriodExt', 'pid'),
-            'module_num'=>array(self::STAT, 'ProCateExt', 'pid'),
-            'data_num'=>array(self::STAT, 'DataExt', 'pid'),
-            'ksObj'=>array(self::BELONGS_TO, 'TagExt', 'ks'),
-            'areaObj'=>array(self::BELONGS_TO, 'TagExt', 'area'),
-
+            'tag'=>array(self::BELONGS_TO, 'ProCateTagExt', 'ptid'),
+            'period'=>array(self::BELONGS_TO, 'ProPeriodExt', 'ppid'),
+            'hospital'=>array(self::BELONGS_TO, 'HospitalExt', 'hid'),
+            'staff'=>array(self::BELONGS_TO, 'StaffExt', 'sid'),
+            'doctor'=>array(self::BELONGS_TO, 'DoctorExt', 'did'),
+            'case'=>array(self::BELONGS_TO, 'ProExt', 'cid'),
+            'ill'=>array(self::BELONGS_TO, 'IllExt', 'iid'),
+            'lid'=>array(self::BELONGS_TO, 'LbExt', 'lid'),
         );
     }
-
     public static $tags = [
-    'sjlx'=>'',
-    'mflx'=>'',
-    'xmjc'=>'',
-    'xmjj'=>''
+        // 选项名
+        // 选项值
+        // 选项加权
+        'v1'=>'',
+            // 选项名
+        // 选项值
+        // 选项加权
+        'v2'=>'',
+            // 选项名
+        // 选项值
+        // 选项加权
+        'v3'=>'',
+            // 选项名
+        // 选项值
+        // 选项加权
+        'v4'=>'',
+            // 选项名
+        // 选项值
+        // 选项加权
+        'v5'=>'',
+            // 选项名
+        // 选项值
+        // 选项加权
+        'v6'=>'',
+            // 选项名
+        // 选项值
+        // 选项加权
+        'v7'=>'',
+            // 选项名
+        // 选项值
+        // 选项加权
+        'v8'=>'',
+            // 选项名
+        // 选项值
+        // 选项加权
+        'v9'=>'',
+            // 选项名
+        // 选项值
+        // 选项加权
+        'v10'=>'',
     ];
 
     public function __set($name='',$value='')
@@ -99,6 +131,10 @@ class ProExt extends Pro{
     }
 
     public function beforeValidate() {
+        
+        if($this->did && !$this->hid) {
+            $this->hid = $this->doctor->hid;
+        }
         if($this->getIsNewRecord()) {
 
             // $res = Yii::app()->controller->sendNotice(($this->plot?$this->plot->title:'').'有新举报，举报原因为：'.$this->reason.'，请登陆后台审核','',1);

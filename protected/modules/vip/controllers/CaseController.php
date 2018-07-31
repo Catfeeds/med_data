@@ -1,8 +1,8 @@
 <?php
 /**
- * 数据控制器
+ * 病例数据控制器
  */
-class DataController extends AdminController{
+class CaseController extends VipController{
 	
 	public $cates = [];
 
@@ -10,32 +10,32 @@ class DataController extends AdminController{
 
 	public $controllerName = '';
 
-	public $modelName = 'DataExt';
+	public $modelName = 'CaseDataExt';
 
 	public function init()
 	{
 		parent::init();
-		$this->controllerName = '数据';
+		$this->controllerName = '病例数据';
 		// $this->cates = CHtml::listData(LeagueExt::model()->normal()->findAll(),'id','name');
 		// $this->cates1 = CHtml::listData(TeamExt::model()->normal()->findAll(),'id','name');
 	}
-	public function actionList($type='title',$value='',$time_type='created',$time='',$cate='',$cate1='')
+	public function actionList($type='title',$value='',$time_type='created',$time='',$cate='')
 	{
 		$modelName = $this->modelName;
 		$criteria = new CDbCriteria;
+		$criteria->addCondition("did=".Yii::app()->user->id);
 		if($value = trim($value))
             if ($type=='title') {
-            	$ids = [];
             	$cre = new CDbCriteria;
 
-                $cre->addSearchCondition('title', $value);
-                $ress = ProExt::model()->findAll($cre);
-                if($ress) {
+                $cre->addSearchCondition('name', $value);
+                $ids = [];
+                if($ress = CaseExt::model()->findAll($criteria)) {
                 	foreach ($ress as $res) {
                 		$ids[] = $res['id'];
                 	}
                 }
-                $criteria->addInCondition('id',$ids);
+                $criteria->addInCondition('cid',$ids);
             } 
         //添加时间、刷新时间筛选
         if($time_type!='' && $time!='')
@@ -50,24 +50,27 @@ class DataController extends AdminController{
 
         }
 		if($cate) {
-			$criteria->addCondition('lid=:cid');
+			$criteria->addCondition('status=:cid');
 			$criteria->params[':cid'] = $cate;
 		}
-		if($cate1) {
-			$criteria->addCondition('tid=:cid');
-			$criteria->params[':cid'] = $cate1;
-		}
 		$infos = $modelName::model()->getList($criteria,20);
-		$this->render('list',['cate'=>$cate,'cate1'=>$cate1,'infos'=>$infos->data,'cates'=>$this->cates,'cates1'=>$this->cates1,'pager'=>$infos->pagination,'type' => $type,'value' => $value,'time' => $time,'time_type' => $time_type,]);
+		// 能添加的病例
+		$cases = Yii::app()->db->createCommand("select c.id,c.name from `case` c left join case_hospital h on c.id=h.pid where h.id=".Yii::app()->user->hid)->queryAll();
+		$this->render('list',['cate'=>$cate,'infos'=>$infos->data,'cates'=>$this->cates,'pager'=>$infos->pagination,'type' => $type,'value' => $value,'time' => $time,'time_type' => $time_type,'cases'=>$cases]);
 	}
 
-	public function actionEdit($id='')
+	public function actionEdit($id='',$type='')
 	{
+		$caseinfo = '';
+		if($type) {
+			$caseinfo = CaseExt::model()->findByPk($type);
+		}
 		$modelName = $this->modelName;
 		$info = $id ? $modelName::model()->findByPk($id) : new $modelName;
 		if(Yii::app()->request->getIsPostRequest()) {
 			$info->attributes = Yii::app()->request->getPost($modelName,[]);
-
+			$info->cid = $type;
+			// $info->time =  is_numeric($info->time)?$info->time : strtotime($info->time);
 			if($info->save()) {
 				$this->setMessage('操作成功','success',['list']);
 			} else {
@@ -75,5 +78,22 @@ class DataController extends AdminController{
 			}
 		} 
 		$this->render('edit',['cates'=>$this->cates,'article'=>$info,'cates1'=>$this->cates1,]);
+	}
+
+	public function actionAjaxStatus($kw='',$ids='')
+	{
+		if(!is_array($ids))
+			if(strstr($ids,',')) {
+				$ids = explode(',', $ids);
+			} else {
+				$ids = [$ids];
+			}
+		foreach ($ids as $key => $id) {
+			$model = SubExt::model()->findByPk($id);
+			$model->status = $kw;
+			if(!$model->save())
+				$this->setMessage(current(current($model->getErrors())),'error');
+		}
+		$this->setMessage('操作成功','success');	
 	}
 }

@@ -1,6 +1,7 @@
 <?php
 $this->pageTitle = $this->controllerName.'新建/编辑';
 $this->breadcrumbs = array($this->controllerName.'管理', $this->pageTitle);
+$alltags = CHtml::listData(BasicTagExt::model()->findAll(),'id','op');
 ?>
 <?php $this->widget('ext.ueditor.UeditorWidget',array('id'=>'UserExt_content','options'=>"toolbars:[['fullscreen','source','undo','redo','|','customstyle','paragraph','fontfamily','fontsize'],
         ['bold','italic','underline','fontborder','strikethrough','superscript','subscript','removeformat',
@@ -15,89 +16,93 @@ $this->breadcrumbs = array($this->controllerName.'管理', $this->pageTitle);
         'print','preview','searchreplace']]")); ?>
 <?php $form = $this->beginWidget('HouseForm', array('htmlOptions' => array('class' => 'form-horizontal'))) ?>
 <div class="form-group">
-    <label class="col-md-2 control-label">名称<span class="required" aria-required="true">*</span></label>
+    <label class="col-md-2 control-label">名字<span class="required" aria-required="true">*</span></label>
     <div class="col-md-6">
-        <?php echo $form->textField($article, 'title', array('class' => 'form-control')); ?>
+        <?php echo $form->textField($article, 'name', array('class' => 'form-control')); ?>
     </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'title') ?></div>
+    <div class="col-md-2"><?php echo $form->error($article, 'name') ?></div>
+</div>
+
+<div class="form-group">
+    <label class="col-md-2 control-label">选项类型<span class="required" aria-required="true">*</span></label>
+    <div class="col-md-6">
+         <?php echo $form->dropDownList($article, 't1', Yii::app()->params['tags'], array('class' => 'form-control', 'encode' => false,'empty'=>'请选择')); ?>
+    </div>
+    <div class="col-md-2"><?php echo $form->error($article, 't1') ?>
+        <span></span>
+    </div>
 </div>
 <div class="form-group">
-    <label class="col-md-2 control-label">简称<span class="required" aria-required="true">*</span></label>
+    <label class="col-md-2 control-label">选项名</label>
     <div class="col-md-6">
-        <?php echo $form->textField($article, 'xmjc', array('class' => 'form-control')); ?>
+        <?php echo $form->textField($article, 'n1', array('class' => 'form-control')); ?><span class="help-block"></span>
     </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'xmjc') ?></div>
+    <div class="col-md-2"><?php echo $form->error($article, 'n1') ?></div>
 </div>
 <div class="form-group">
-    <label class="col-md-2 control-label">项目简介<span class="required" aria-required="true">*</span></label>
+    <label class="col-md-2 control-label">选项值</label>
     <div class="col-md-6">
-        <?php echo $form->textarea($article, 'xmjj', array('id'=>'UserExt_content')); ?>
+        <?php echo $form->textField($article, 'o1', array('class' => 'form-control')); ?><span class="help-block">单选或复选的选项名称，多个用空格隔开</span>
     </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'xmjj') ?></div>
+    <div class="col-md-2"><?php echo $form->error($article, 'o1') ?></div>
 </div>
 <div class="form-group">
-    <label class="col-md-2 control-label">随机类型<span class="required" aria-required="true">*</span></label>
+    <label class="col-md-2 control-label">选项加权</label>
     <div class="col-md-6">
-        <?php echo $form->textField($article, 'sjlx', array('class' => 'form-control')); ?>
+        <?php echo $form->textField($article, 's1', array('class' => 'form-control')); ?><span class="help-block">单选或复选的选项加权，多个用空格隔开，请与选项个数对应</span>
     </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'sjlx') ?></div>
+    <div class="col-md-2"><?php echo $form->error($article, 's1') ?></div>
 </div>
 <div class="form-group">
-    <label class="col-md-2 control-label">盲法类型<span class="required" aria-required="true">*</span></label>
+    <label class="col-md-2 control-label">内置标签</label>
     <div class="col-md-6">
-        <?php echo $form->textField($article, 'mflx', array('class' => 'form-control')); ?>
+       <?php echo $form->dropDownList($article, 'l1', $alltags, array('class' => 'form-control select2', 'encode' => false,'empty'=>'请选择')); ?><span class="help-block">类型请选择内置标签</span>
     </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'mflx') ?></div>
+    <div class="col-md-2"><a class="btn blue " onclick="showmore()"><i class="fa fa-plus"> 更多选项</i></a><?php echo $form->error($article, 'l1') ?></div>
+
 </div>
-<div class="form-group">
-    <label class="col-md-2 control-label">总例数<span class="required" aria-required="true">*</span></label>
-    <div class="col-md-6">
-        <?php echo $form->textField($article, 'num', array('class' => 'form-control')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'num') ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">疾病<span class="required" aria-required="true">*</span></label>
-    <div class="col-md-6">
-        <?php echo $form->textField($article, 'dis', array('class' => 'form-control')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'dis') ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">随机种子数<span class="required" aria-required="true">*</span></label>
-    <div class="col-md-6">
-        <?php echo $form->textField($article, 'sjzzs', array('class' => 'form-control')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'sjzzs') ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">选择科室</label>
-    <div class="col-md-6">
-        <?php echo $form->dropDownList($article, 'ks', CHtml::listData(TagExt::model()->findAll("cate='ks'"),'id','name'), array('class' => 'form-control select2', 'encode' => false,'empty'=>'请选择')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'ks') ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">选择区域</label>
-    <div class="col-md-6">
-        <?php echo $form->dropDownList($article, 'area', CHtml::listData(TagExt::model()->findAll("cate='area'"),'id','name'), array('class' => 'form-control select2', 'encode' => false,'empty'=>'请选择')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'area') ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">关键词<span class="required" aria-required="true">*</span></label>
-    <div class="col-md-6">
-        <?php echo $form->textField($article, 'kw', array('class' => 'form-control')); ?>
-        <span class="help-inline">多个用空格隔开</span>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'kw') ?></div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label">状态</label>
-    <div class="col-md-6">
-        <?php echo $form->radioButtonList($article, 'status', ArticleExt::$status, array('separator' => '')); ?>
-    </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'status') ?></div>
+<div id="showmore" style="display: none">
+    <?php foreach (range(2, 10) as $key) {?>
+    <?php $n = 'n'.$key;$s = 's'.$key;$t = 't'.$key;$o = 'o'.$key;$l = 'l'.$key;?>
+        <div class="form-group">
+            <label class="col-md-2 control-label">选项类型<span class="required" aria-required="true">*</span></label>
+            <div class="col-md-6">
+                 <?php echo $form->dropDownList($article, $t, Yii::app()->params['tags'], array('class' => 'form-control', 'encode' => false,'empty'=>'请选择')); ?>
+            </div>
+            <div class="col-md-2"><?php echo $form->error($article,$t) ?>
+                <span></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">选项名</label>
+            <div class="col-md-6">
+                <?php echo $form->textField($article, $n, array('class' => 'form-control')); ?><span class="help-block">单选或复选的选项名称，多个用空格隔开</span>
+            </div>
+            <div class="col-md-2"><?php echo $form->error($article, $n) ?></div>
+        </div>
+        <div class="form-group">
+                <label class="col-md-2 control-label">选项值</label>
+                <div class="col-md-6">
+                    <?php echo $form->textField($article, $o, array('class' => 'form-control')); ?><span class="help-block">单选或复选的选项名称，多个用空格隔开</span>
+                </div>
+                <div class="col-md-2"><?php echo $form->error($article, $o) ?></div>
+        </div>
+        <div class="form-group">
+                <label class="col-md-2 control-label">选项加权</label>
+                <div class="col-md-6">
+                    <?php echo $form->textField($article, $s, array('class' => 'form-control')); ?><span class="help-block">单选或复选的选项加权，多个用空格隔开，请与选项个数对应</span>
+                </div>
+                <div class="col-md-2"><?php echo $form->error($article, $s) ?></div>
+        </div>
+        <div class="form-group">
+          <label class="col-md-2 control-label">内置标签</label>
+          <div class="col-md-6">
+             <?php echo $form->dropDownList($article, $l, $alltags, array('class' => 'form-control select2', 'encode' => false,'empty'=>'请选择')); ?><span class="help-block">类型请选择内置标签</span>
+          </div>
+          <div class="col-md-2"><?php echo $form->error($article, $l) ?></div>
+
+      </div>
+    <?php } ?>
 </div>
 <div class="form-actions">
     <div class="row">
@@ -112,7 +117,10 @@ $this->breadcrumbs = array($this->controllerName.'管理', $this->pageTitle);
 
 <?php
 $js = "
-
+    function showmore()
+    {
+        $('#showmore').css('display','block');
+    }
     var getHousesAjax =
      {
         url: '".$this->createUrl('/admin/plot/AjaxGetHouse')."',"."

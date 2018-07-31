@@ -4,7 +4,7 @@
  * @author steven.allen <[<email address>]>
  * @date(2017.2.12)
  */
-class ProExt extends Pro{
+class IllExt extends Ill{
     public static $status = [
         '禁用','启用'
     ];
@@ -14,61 +14,11 @@ class ProExt extends Pro{
     public function relations()
     {
          return array(
-            // 'staff'=>array(self::BELONGS_TO, 'StaffExt', 'sid'),
-            // 'doctor'=>array(self::BELONGS_TO, 'DoctorExt', 'did'),
-            'periods'=>array(self::HAS_MANY, 'ProPeriodExt', 'pid'),
-            'hospital_num'=>array(self::STAT, 'ProHospitalExt', 'pid'),
-            'hospitals'=>array(self::MANY_MANY, 'HospitalExt', 'pro_hospital(pid,hid)'),
-            'period_num'=>array(self::STAT, 'ProPeriodExt', 'pid'),
-            'module_num'=>array(self::STAT, 'ProCateExt', 'pid'),
-            'data_num'=>array(self::STAT, 'DataExt', 'pid'),
-            'ksObj'=>array(self::BELONGS_TO, 'TagExt', 'ks'),
-            'areaObj'=>array(self::BELONGS_TO, 'TagExt', 'area'),
-
+            // 'options'=>array(self::HAS_MANY, 'LbExt', 'lid'),
+            'pro'=>array(self::BELONGS_TO, 'ProExt', 'pid'),
+            'hospital'=>array(self::BELONGS_TO, 'HospitalExt', 'hid'),
+            'doctor'=>array(self::BELONGS_TO, 'DoctorExt', 'did'),
         );
-    }
-
-    public static $tags = [
-    'sjlx'=>'',
-    'mflx'=>'',
-    'xmjc'=>'',
-    'xmjj'=>''
-    ];
-
-    public function __set($name='',$value='')
-    {
-        // var_dump($name);
-       if (isset(self::$tags[$name])){
-            if(is_array($this->data_conf))
-                $data_conf = $this->data_conf;
-            else
-                $data_conf = CJSON::decode($this->data_conf);
-            self::$tags[$name] = $value;
-            $data_conf[$name] = $value;
-            // var_dump(1);exit;
-            $this->data_conf = json_encode($data_conf);
-        }
-        else
-            parent::__set($name, $value);
-    }
-
-    public function __get($name='')
-    {
-        if (isset(self::$tags[$name])) {
-            if(is_array($this->data_conf))
-                $data_conf = $this->data_conf;
-            else
-                $data_conf = CJSON::decode($this->data_conf);
-
-            if(!isset($data_conf[$name]))
-                $value = self::$tags[$name];
-            else
-                $value = self::$tags[$name] ? self::$tags[$name] : $data_conf[$name];
-
-            return $value;
-        } else{
-            return parent::__get($name);
-        }
     }
 
     /**
@@ -77,7 +27,6 @@ class ProExt extends Pro{
     public function rules() {
         $rules = parent::rules();
         return array_merge($rules, array(
-             array(implode(',',array_keys(self::$tags)), 'safe'),
             // array('name', 'unique', 'message'=>'{attribute}已存在')
         ));
     }

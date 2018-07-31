@@ -6,6 +6,7 @@
  * The followings are the available columns in table 'pro_cate':
  * @property integer $id
  * @property string $name
+ * @property string $image
  * @property integer $pid
  * @property integer $ppid
  * @property integer $lid
@@ -34,9 +35,10 @@ class ProCate extends CActiveRecord
 			array('created', 'required'),
 			array('pid, ppid, lid, sort, created, updated', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>100),
+			array('image', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, name, pid, ppid, lid, sort, created, updated', 'safe', 'on'=>'search'),
+			array('id, name, image, pid, ppid, lid, sort, created, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -59,6 +61,7 @@ class ProCate extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'name' => 'Name',
+			'image' => 'Image',
 			'pid' => 'Pid',
 			'ppid' => 'Ppid',
 			'lid' => 'Lid',
@@ -88,6 +91,7 @@ class ProCate extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
+		$criteria->compare('image',$this->image,true);
 		$criteria->compare('pid',$this->pid);
 		$criteria->compare('ppid',$this->ppid);
 		$criteria->compare('lid',$this->lid);

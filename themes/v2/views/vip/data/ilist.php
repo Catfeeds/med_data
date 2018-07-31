@@ -39,12 +39,13 @@ $this->breadcrumbs = array($this->pageTitle);
     <tbody>
     <?php foreach($infos as $v): ?>
         <tr>
-            <td  class="text-center"><?php echo $v->iname ?></td>
-            <td class="text-center"><?php echo $v->ino ?></td>
+            <td  class="text-center"><?php echo $v->name ?></td>
+            <td class="text-center"><?php echo $v->no ?></td>
             <td class="text-center"><?php echo date('Y-m-d H:i:s',$v->created); ?></td>
             <td class="text-center"><?php echo date('Y-m-d H:i:s',$v->updated); ?></td>
             <td  class="text-center">
-                <a href="<?php echo $this->createUrl('edit',array('id'=>$v->id,'pid'=>$pid, 'referrer'=>Yii::app()->request->url)) ?>" class="btn default btn-xs green"><i class="fa fa-edit"></i> 编辑 </a>
+                <a href="<?php echo $this->createUrl('edit',array('iid'=>$v->id,'pid'=>$pid, 'referrer'=>Yii::app()->request->url)) ?>" class="btn default btn-xs blue"><i class="fa fa-edit"></i> 数据录入 </a>
+                <a href="<?php echo $this->createUrl('editinfo',array('id'=>$v->id,'pid'=>$pid, 'referrer'=>Yii::app()->request->url)) ?>" class="btn default btn-xs green"><i class="fa fa-edit"></i> 编辑 </a>
             </td>
         </tr>
     <?php endforeach; ?>
