@@ -1,6 +1,7 @@
 <?php
 $this->pageTitle = $this->controllerName.'新建/编辑';
 $this->breadcrumbs = array($this->controllerName.'管理', $this->pageTitle);
+$casee = CaseExt::model()->findByPk($type);
 ?>
 <?php $this->widget('ext.ueditor.UeditorWidget',array('id'=>'UserExt_content','options'=>"toolbars:[['fullscreen','source','undo','redo','|','customstyle','paragraph','fontfamily','fontsize'],
         ['bold','italic','underline','fontborder','strikethrough','superscript','subscript','removeformat',
@@ -55,6 +56,56 @@ $this->breadcrumbs = array($this->controllerName.'管理', $this->pageTitle);
       </div>
       <div class="col-md-12"><?php echo $form->error($article, 'image'); ?></div>
   </div>
+  
+    <!-- <table class="table table-bordered table-striped">
+    <tbody> -->
+    <?php foreach (range(1, 10) as $n) { $nam = 'n'.$n;$no = 'o'.$n;$ns = 's'.$n;$nt = 't'.$n; $lt = 'l'.$n;$nv = 'v'.$n;?>
+    <?php if($casee->$nam): ?>
+
+      <?php switch ($casee->$nt) {
+        case '1':?>
+          <div class="form-group"><label class="col-md-2 control-label"><?=$casee->$nam?></label> <div class="col-md-4"><input type="text" value="<?=$article->$nv?>" name="CaseDataExt[v<?=$n?>]" class="form-inline w1" ></div></div>
+          <?php break;
+        case '2':?>
+        <?php $arr = []; if($casee->$no) {
+          $noarr = array_filter(explode(' ', $casee->$no));
+          $nsarr = array_values(explode(' ', $casee->$ns));
+          // var_dump($noarr,$nsarr);exit;
+          $arr = array_combine($nsarr, $noarr);
+          // foreach (explode(' ', $casee->no) as $key => $value) {
+          //  # code...
+          // }
+          } ?>
+        <div class="form-group"><label class="col-md-2 control-label"><?=$casee->$nam?></label> <div class="col-md-4"><?=CHtml::radioButtonList('CaseDataExt[v'.$n.']',$article->$nv,$arr,['separator'=>' '])?></div></div>
+        <?php break;
+        case '3': ?>
+          <?php $arr = []; if($casee->$no) {
+          $noarr = array_filter(explode(' ', $casee->$no));
+          $nsarr = array_values(explode(' ', $casee->$ns));
+          // if(count($noarr)!=count($nsarr)) {
+          //  var_dump($noarr,$nsarr);exit;
+          // }
+          $arr = array_combine($nsarr, $noarr);
+          // foreach (explode(' ', $casee->no) as $key => $value) {
+          //  # code...
+          // }
+          } ?>
+          <div class="form-group"><label class="col-md-2 control-label"><?=$casee->$nam?></label> <div class="col-md-4"><?=CHtml::checkBoxList('CaseDataExt[v'.$n.']',$article->$nv,$arr,['separator'=>' '])?></div></div>
+          <?php break;
+          case '4':?>
+          <?php $tag = BasicTagExt::model()->findByPk($casee->$lt); if(!$tag) break; ?>
+            <div class="form-group"><label class="col-md-2 control-label"><?=$casee->$nam?></label><div class="col-md-4"><input type="text" name="CaseDataExt[v<?=$n?>]" class="form-inline w1" value="<?=$article->$nv?>" > <?=CHtml::dropDownList('unit','',explode(' ', $tag->unit))?></div></div>
+            <?php break;
+
+      } ?>
+    <?php else: break;?>
+
+    <?php endif; ?>
+  <?php } ?>
+    <!-- </tbody>
+    </table> -->
+  <!-- </div> -->
+  
 <div class="form-actions">
     <div class="row">
         <div class="col-md-offset-3 col-md-9">

@@ -65,11 +65,13 @@ class CaseController extends VipController{
 		if($type) {
 			$caseinfo = CaseExt::model()->findByPk($type);
 		}
-		$modelName = $this->modelName;
+		$modelName = 'CaseDataExt';
 		$info = $id ? $modelName::model()->findByPk($id) : new $modelName;
 		if(Yii::app()->request->getIsPostRequest()) {
-			$info->attributes = Yii::app()->request->getPost($modelName,[]);
+			$info->attributes = Yii::app()->request->getPost('CaseDataExt',[]);
+			// var_dump($info->attributes);exit;
 			$info->cid = $type;
+			$info->did = Yii::app()->user->id;
 			// $info->time =  is_numeric($info->time)?$info->time : strtotime($info->time);
 			if($info->save()) {
 				$this->setMessage('操作成功','success',['list']);
@@ -77,7 +79,9 @@ class CaseController extends VipController{
 				$this->setMessage(array_values($info->errors)[0][0],'error');
 			}
 		} 
-		$this->render('edit',['cates'=>$this->cates,'article'=>$info,'cates1'=>$this->cates1,]);
+		$datas = [];
+
+		$this->render('edit',['cates'=>$this->cates,'article'=>$info,'cates1'=>$this->cates1,'type'=>$type,'datas'=>$datas]);
 	}
 
 	public function actionAjaxStatus($kw='',$ids='')
