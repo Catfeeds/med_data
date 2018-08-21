@@ -1,12 +1,12 @@
 <?php
-$this->pageTitle = $this->controllerName.'列表';
+$this->pageTitle = '病例数据列表';
 $this->breadcrumbs = array($this->pageTitle);
 ?>
 <div class="table-toolbar">
     <div class="btn-group pull-left">
         <form class="form-inline">
             <div class="form-group">
-                <?php echo CHtml::dropDownList('type',$type,array('title'=>'病例'),array('class'=>'form-control','encode'=>false)); ?>
+                <?php echo CHtml::dropDownList('type',$type,array('title'=>'病例标题'),array('class'=>'form-control','encode'=>false)); ?>
             </div>
             <div class="form-group">
                 <?php echo CHtml::textField('value',$value,array('class'=>'form-control chose_text')) ?>
@@ -17,33 +17,22 @@ $this->breadcrumbs = array($this->pageTitle);
             <?php Yii::app()->controller->widget("DaterangepickerWidget",['time'=>$time,'params'=>['class'=>'form-control chose_text']]);?>
             <button type="submit" class="btn blue">搜索</button>
             <a class="btn yellow" onclick="removeOptions()"><i class="fa fa-trash"></i>&nbsp;清空</a>
-             <div class="btn-group">
-            <button id="btnGroupVerticalDrop1" type="button" class="btn blue dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-           <i class="fa fa-plus"></i> 添加病例 
-            </button>
-            <ul class="dropdown-menu" role="menu">
-            <?php foreach($cases as $key=>$v1){?>
-                <li>
-                    <?=CHtml::link($v1['name'],$this->createUrl('edit',['type'=>$v1['id']]))?>
-                </li>
-              <?php  }?>
-            </ul>
-        </div>
         </form>
-
     </div>
-    <div class="pull-right">
-       
-        <!-- <a href="<?php echo $this->createAbsoluteUrl('edit') ?>" class="btn blue">
-            添加产品 <i class="fa fa-plus"></i>
-        </a> -->
-    </div>
+    <!-- <div class="pull-right">
+        <a href="<?php echo $this->createAbsoluteUrl('edit') ?>" class="btn blue">
+            添加<?=$this->controllerName?> <i class="fa fa-plus"></i>
+        </a>
+    </div> -->
 </div>
    <table class="table table-bordered table-striped table-condensed flip-content table-hover">
     <thead class="flip-content">
     <tr>
-        <th class="text-center">病例信息</th>
-        <th class="text-center">患者信息</th>
+        <th width="35px"><input type="checkbox"></th>
+        <th class="text-center">ID</th>
+        <th class="text-center">病例名</th>
+        <th class="text-center">患者名</th>
+        <th class="text-center">患者联系</th>
         <th class="text-center">添加时间</th>
         <th class="text-center">修改时间</th>
         <th class="text-center">操作</th>
@@ -52,13 +41,16 @@ $this->breadcrumbs = array($this->pageTitle);
     <tbody>
     <?php foreach($infos as $k=>$v): ?>
         <tr>
-            <td class="text-center"><?=$v->case->name?></td>
-            <td class="text-center"><?=$v->name.'/'.$v->phone?></td> 
+        <td class="text-center"><input type="checkbox" name="item[]" value="<?php echo $v['id'] ?>" class="checkboxes"></td>
+            <td style="text-align:center;vertical-align: middle"><?php echo $v->id; ?></td>
+            <td class="text-center"><?=$v->case?$v->case->name:''?></td>
+            <td class="text-center"><?=$v->name?></td> 
+            <td class="text-center"><?=$v->addr.'/'.$v->phone?></td> 
             <td class="text-center"><?=date('Y-m-d',$v->created)?></td>
             <td class="text-center"><?=date('Y-m-d',$v->updated)?></td>
 
             <td style="text-align:center;vertical-align: middle">
-                <a href="<?php echo $this->createUrl('edit',array('id'=>$v->id,'type'=>$v->cid)); ?>" class="btn default btn-xs green"><i class="fa fa-edit"></i> 修改 </a>
+                <a href="<?php echo $this->createUrl('caseedit',array('id'=>$v->id,'type'=>$v->cid)); ?>" class="btn default btn-xs green"><i class="fa fa-edit"></i> 修改 </a>
                 <?php echo CHtml::htmlButton('删除', array('data-toggle'=>'confirmation', 'class'=>'btn btn-xs red', 'data-title'=>'确认删除？', 'data-btn-ok-label'=>'确认', 'data-btn-cancel-label'=>'取消', 'data-popout'=>true,'ajax'=>array('url'=>$this->createUrl('del'),'type'=>'get','success'=>'function(data){location.reload()}','data'=>array('id'=>$v->id,'class'=>get_class($v)))));?>
 
 
@@ -67,6 +59,10 @@ $this->breadcrumbs = array($this->pageTitle);
     <?php endforeach;?>
     </tbody>
 </table>
+<div class="form-group">
+    <button type="button" class="btn btn-success btn-sm group-checkable" data-set=".checkboxes">全选/反选</button>
+    <?php echo CHtml::ajaxLink('查看所选病例', $this->createUrl('/admin/ill/caseall'), array('data'=>array('ids'=>'js:getChecked()'),'type'=>'get', 'success'=>'function(data){$("body").html(data)}', 'beforeSend'=>'function(){if(!getChecked()){toastr.error("请至少选择一项！");return false;}}'), array('class'=>'btn btn-success btn-sm')); ?>
+</div>
 <?php $this->widget('VipLinkPager', array('pages'=>$pager)); ?>
 
 <script>

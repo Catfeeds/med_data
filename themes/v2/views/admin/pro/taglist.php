@@ -50,6 +50,7 @@ $this->breadcrumbs = array((isset($minfo)?$minfo->pro->title:''),$this->pageTitl
             <td class="text-center"><?=date('Y-m-d',$v->updated)?></td>
 
             <td style="text-align:center;vertical-align: middle">
+                <a href="<?php echo $this->createUrl('plist',array('id'=>$v->id,'mid'=>$mid)); ?>" class="btn default btn-xs yellow"> 数据汇总 </a>
                 <a href="<?php echo $this->createUrl('tagedit',array('id'=>$v->id,'mid'=>$mid)); ?>" class="btn default btn-xs green"><i class="fa fa-edit"></i> 修改 </a>
                 <?php echo CHtml::htmlButton('删除', array('data-toggle'=>'confirmation', 'class'=>'btn btn-xs red', 'data-title'=>'确认删除？', 'data-btn-ok-label'=>'确认', 'data-btn-cancel-label'=>'取消', 'data-popout'=>true,'ajax'=>array('url'=>$this->createUrl('del'),'type'=>'get','success'=>'function(data){location.reload()}','data'=>array('id'=>$v->id,'class'=>get_class($v)))));?>
 

@@ -358,4 +358,86 @@ class ProController extends AdminController{
 		} 
 		$this->render('tagedit',['cates'=>$this->cates,'article'=>$info,'mid'=>$mid,'cates1'=>$this->cates1,]);
 	}
+
+	public function actionPlist($id='',$mid='')
+	{
+		$tag = ProCateTagExt::model()->findByPk($id);
+		// 所有jieduan
+		$pro = $tag->pro;
+		$ottags = Yii::app()->db->createCommand("select ppid,id from pro_cate_tag where name='".$tag->name."' and pid=".$pro->id)->queryAll();
+		$petarr = [];
+		$ppidarr = [];
+		if($ottags) {
+			foreach ($ottags as $key => $value) {
+				$petarr[$value['id']] = $value['ppid'];
+				$ppidarr[] = $value['ppid'];
+			}
+		}
+		// var_dump($petarr);exit;
+		$data = [];
+		$pes = [];
+		$datas = DataExt::model()->with('period')->findAll("t.pid=".$pro->id);
+		// var_dump(count($datas));exit;
+		if($ppidarr && $datas)
+			foreach ($datas as $key => $value) {
+				!in_array($value->period->name, $pes) && $pes[] = $value->period->name;
+				foreach ($ppidarr as $ppid) {
+					if($value->ppid==$ppid) {
+						$data[$value->iid][$value->ppid] = $value->data;
+					} 
+				}
+				// if(in_array($value->ptid, array_keys($petarr))) {
+
+				// 	$data[$value->iid][] = [$value->period->name=>$value->data];
+				// }
+			}
+		// var_dump($data);exit;
+		$this->render('plist',['datas'=>$data,'pes'=>$pes,'ppids'=>$ppidarr,'mid'=>$mid,'thisid'=>$id]);
+	}
+
+	public function actionExport($id='')
+	{
+		$tag = ProCateTagExt::model()->findByPk($id);
+		// 所有jieduan
+		$pro = $tag->pro;
+		$ottags = Yii::app()->db->createCommand("select ppid,id from pro_cate_tag where name='".$tag->name."' and pid=".$pro->id)->queryAll();
+		$petarr = [];
+		$ppidarr = [];
+		if($ottags) {
+			foreach ($ottags as $key => $value) {
+				$petarr[$value['id']] = $value['ppid'];
+				$ppidarr[] = $value['ppid'];
+			}
+		}
+		// var_dump($petarr);exit;
+		$data = [];
+		$pes = [];
+		$pes[] = '患者id';
+		$datas = DataExt::model()->with('period')->findAll("t.pid=".$pro->id);
+		// var_dump(count($datas));exit;
+		if($ppidarr && $datas)
+			foreach ($datas as $key => $value) {
+				!in_array($value->period->name, $pes) && $pes[] = $value->period->name;
+				foreach ($ppidarr as $ppid) {
+					if($value->ppid==$ppid) {
+						$data[$value->iid][$value->ppid] = $value->data;
+					} 
+				}
+			}
+
+		$edata = [];
+		if($data) {
+			foreach ($data as $key => $value) {
+				
+					$tmp[] = $key;
+				foreach ($ppidarr as $ppid) {
+					$tmp[] = isset($value[$ppid])?$value[$ppid]:'';
+				}
+				$edata[] = $tmp;
+				unset($tmp);
+			}
+		}
+		// var_dump($edata);exit;
+		ExcelHelper::cvs_write_browser(date("YmdHis",time()),$pes,$edata); 
+	}
 }

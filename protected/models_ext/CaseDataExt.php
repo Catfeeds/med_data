@@ -19,7 +19,7 @@ class CaseDataExt extends CaseData{
             'hospital'=>array(self::BELONGS_TO, 'HospitalExt', 'hid'),
             'staff'=>array(self::BELONGS_TO, 'StaffExt', 'sid'),
             'doctor'=>array(self::BELONGS_TO, 'DoctorExt', 'did'),
-            'case'=>array(self::BELONGS_TO, 'ProExt', 'cid'),
+            'case'=>array(self::BELONGS_TO, 'CaseExt', 'cid'),
             'ill'=>array(self::BELONGS_TO, 'IllExt', 'iid'),
             'lid'=>array(self::BELONGS_TO, 'LbExt', 'lid'),
         );

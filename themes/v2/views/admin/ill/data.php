@@ -28,7 +28,7 @@ $this->breadcrumbs = array( $this->pageTitle);
         	unset($g['ppid']);
         	$g['ppid'] = $value->id;
         	?>
-            <a href="<?=$this->createUrl('edit',$g)?>"  aria-expanded="<?=!$key?'true':'false'?>"><?=$value->name?></a>
+            <a href="<?=$this->createUrl('data',$g)?>"  aria-expanded="<?=!$key?'true':'false'?>"><?=$value->name?></a>
         </li>
         <?php  } ?>
     </ul>

@@ -55,7 +55,7 @@ class CaseController extends VipController{
 		}
 		$infos = $modelName::model()->getList($criteria,20);
 		// 能添加的病例
-		$cases = Yii::app()->db->createCommand("select c.id,c.name from `case` c left join case_hospital h on c.id=h.pid where h.id=".Yii::app()->user->hid)->queryAll();
+		$cases = Yii::app()->db->createCommand("select c.id,c.name from `case` c left join case_hospital h on c.id=h.pid where h.hid=".Yii::app()->user->hid)->queryAll();
 		$this->render('list',['cate'=>$cate,'infos'=>$infos->data,'cates'=>$this->cates,'pager'=>$infos->pagination,'type' => $type,'value' => $value,'time' => $time,'time_type' => $time_type,'cases'=>$cases]);
 	}
 

@@ -1,74 +1,39 @@
 <?php
-$this->pageTitle = $this->controllerName.'列表';
+$this->pageTitle = '数据汇总';
 $this->breadcrumbs = array($this->pageTitle);
 ?>
 <div class="table-toolbar">
-    <div class="btn-group pull-left">
-        <form class="form-inline">
-            <div class="form-group">
-                <?php echo CHtml::dropDownList('type',$type,array('title'=>'病例'),array('class'=>'form-control','encode'=>false)); ?>
-            </div>
-            <div class="form-group">
-                <?php echo CHtml::textField('value',$value,array('class'=>'form-control chose_text')) ?>
-            </div>
-            <div class="form-group">
-                <?php echo CHtml::dropDownList('time_type',$time_type,array('created'=>'添加时间','updated'=>'修改时间'),array('class'=>'form-control','encode'=>false)); ?>
-            </div>
-            <?php Yii::app()->controller->widget("DaterangepickerWidget",['time'=>$time,'params'=>['class'=>'form-control chose_text']]);?>
-            <button type="submit" class="btn blue">搜索</button>
-            <a class="btn yellow" onclick="removeOptions()"><i class="fa fa-trash"></i>&nbsp;清空</a>
-             <div class="btn-group">
-            <button id="btnGroupVerticalDrop1" type="button" class="btn blue dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-           <i class="fa fa-plus"></i> 添加病例 
-            </button>
-            <ul class="dropdown-menu" role="menu">
-            <?php foreach($cases as $key=>$v1){?>
-                <li>
-                    <?=CHtml::link($v1['name'],$this->createUrl('edit',['type'=>$v1['id']]))?>
-                </li>
-              <?php  }?>
-            </ul>
-        </div>
-        </form>
-
-    </div>
     <div class="pull-right">
-       
-        <!-- <a href="<?php echo $this->createAbsoluteUrl('edit') ?>" class="btn blue">
-            添加产品 <i class="fa fa-plus"></i>
-        </a> -->
+        <a target="_blank" href="<?php echo $this->createAbsoluteUrl('export',['id'=>$thisid]) ?>" class="btn yellow">
+            导出数据
+        </a>
+        <a href="<?php echo $this->createAbsoluteUrl('taglist',['mid'=>$mid]) ?>" class="btn blue">
+           返回列表
+        </a>
     </div>
 </div>
-   <table class="table table-bordered table-striped table-condensed flip-content table-hover">
+<table class="table table-bordered table-striped table-condensed flip-content table-hover">
     <thead class="flip-content">
     <tr>
-        <th class="text-center">病例信息</th>
-        <th class="text-center">患者信息</th>
-        <th class="text-center">添加时间</th>
-        <th class="text-center">修改时间</th>
-        <th class="text-center">操作</th>
+        <th class="text-center">患者id</th>
+        <?php if($pes) {
+          foreach ($pes as $key => $value) {?>
+            <th class="text-center"><?=$value?></th>
+         <?php  }
+          } ?>
     </tr>
     </thead>
     <tbody>
-    <?php foreach($infos as $k=>$v): ?>
+    <?php if($datas) foreach($datas as $k=>$v): ?>
         <tr>
-            <td class="text-center"><?=$v->case->name?></td>
-            <td class="text-center"><?=$v->name.'/'.$v->phone?></td> 
-            <td class="text-center"><?=date('Y-m-d',$v->created)?></td>
-            <td class="text-center"><?=date('Y-m-d',$v->updated)?></td>
-
-            <td style="text-align:center;vertical-align: middle">
-                <a href="<?php echo $this->createUrl('edit',array('id'=>$v->id,'type'=>$v->cid)); ?>" class="btn default btn-xs green"><i class="fa fa-edit"></i> 修改 </a>
-                <?php echo CHtml::htmlButton('删除', array('data-toggle'=>'confirmation', 'class'=>'btn btn-xs red', 'data-title'=>'确认删除？', 'data-btn-ok-label'=>'确认', 'data-btn-cancel-label'=>'取消', 'data-popout'=>true,'ajax'=>array('url'=>$this->createUrl('del'),'type'=>'get','success'=>'function(data){location.reload()}','data'=>array('id'=>$v->id,'class'=>get_class($v)))));?>
-
-
-            </td>
+            <td style="text-align:center;vertical-align: middle"><?php echo $k; ?></td>
+            <?php if($v)  foreach ($ppids as $key => $value) {?>
+              <td class="text-center"><?=isset($v[$value])?$v[$value]:''?></td>
+            <?php  } ?>
         </tr>
     <?php endforeach;?>
     </tbody>
 </table>
-<?php $this->widget('VipLinkPager', array('pages'=>$pager)); ?>
-
 <script>
 <?php Tools::startJs(); ?>
     setInterval(function(){
