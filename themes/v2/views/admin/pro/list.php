@@ -37,7 +37,7 @@ $this->breadcrumbs = array($this->pageTitle);
         <th class="text-center">ID</th>
         <th class="text-center">名称</th>
         <th class="text-center">随机类型</th>
-        <th class="text-center">盲法类型</th>
+        <!-- <th class="text-center">盲法类型</th> -->
         <!-- <th class="text-center">机构数</th> -->
         <th class="text-center">总/完成例数</th>
         <th class="text-center">疾病</th>
@@ -55,7 +55,7 @@ $this->breadcrumbs = array($this->pageTitle);
             <td style="text-align:center;vertical-align: middle"><?php echo $v->id; ?></td>
             <td class="text-center"><?=$v->xmjc?$v->xmjc:$v->title?></td>
             <td class="text-center"><?=$v->sjlx?></td> 
-            <td class="text-center"><?=$v->mflx?></td>
+            <!-- <td class="text-center"><?=$v->mflx?></td> -->
             <td class="text-center"><?=$v->num.'/'.$v->data_num?></td>
             <td class="text-center"><?=$v->dis?></td>
             <td class="text-center"><?=$v->ksObj?$v->ksObj->name:''?></td>

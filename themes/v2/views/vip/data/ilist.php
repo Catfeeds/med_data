@@ -33,16 +33,23 @@ $this->breadcrumbs = array($this->pageTitle);
             <th class="text-center">编号</th>
             <th class="text-center">创建时间</th>
             <th class="text-center">修改时间</th>
+            <th class="text-center">组别名</th>
             <th class="text-center">操作</th>
         </tr>
     </thead>
     <tbody>
-    <?php foreach($infos as $v): ?>
+    <?php foreach($infos as $v): $pro = $v->pro; $mangword = ''; if(!$pro->mflx) {
+        $problind = ProBlindExt::model()->find("pid=$pid and no=".$v->no);
+        if($problind)
+            $mangword = $problind->name;
+
+    } ?>
         <tr>
             <td  class="text-center"><?php echo $v->name ?></td>
             <td class="text-center"><?php echo $v->no ?></td>
             <td class="text-center"><?php echo date('Y-m-d H:i:s',$v->created); ?></td>
             <td class="text-center"><?php echo date('Y-m-d H:i:s',$v->updated); ?></td>
+            <td class="text-center"><?=$pro->mflx?'<a class="btn btn-xs blue" href="applyPo?id='.$v->id.'">申请破盲</a>':$mangword?></td>
             <td  class="text-center">
                 <a href="<?php echo $this->createUrl('edit',array('iid'=>$v->id,'pid'=>$pid, 'referrer'=>Yii::app()->request->url)) ?>" class="btn default btn-xs blue"><i class="fa fa-edit"></i> 数据录入 </a>
                 <a href="<?php echo $this->createUrl('editinfo',array('id'=>$v->id,'pid'=>$pid, 'referrer'=>Yii::app()->request->url)) ?>" class="btn default btn-xs green"><i class="fa fa-edit"></i> 编辑 </a>

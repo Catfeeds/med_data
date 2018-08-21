@@ -8,6 +8,9 @@ class ProExt extends Pro{
     public static $status = [
         '禁用','启用'
     ];
+    public static $mang = [
+        '非盲','双盲'
+    ];
 	/**
      * 定义关系
      */

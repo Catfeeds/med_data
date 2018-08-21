@@ -45,7 +45,7 @@ $this->breadcrumbs = array($this->controllerName.'管理', $this->pageTitle);
 <div class="form-group">
     <label class="col-md-2 control-label">盲法类型<span class="required" aria-required="true">*</span></label>
     <div class="col-md-6">
-        <?php echo $form->textField($article, 'mflx', array('class' => 'form-control')); ?>
+        <?php echo $form->dropDownList($article, 'mflx', ProExt::$mang, array('class' => 'form-control select2', 'encode' => false,'empty'=>'请选择')); ?>
     </div>
     <div class="col-md-2"><?php echo $form->error($article, 'mflx') ?></div>
 </div>

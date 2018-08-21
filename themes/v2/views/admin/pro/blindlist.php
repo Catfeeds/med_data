@@ -36,7 +36,7 @@ $this->breadcrumbs = array($this->pageTitle);
     <tr>
         <th class="text-center">ID</th>
         <th class="text-center">编号</th>
-        <th class="text-center">组别</th>
+        <th class="text-center">分组名</th>
         <th class="text-center">添加时间</th>
         <th class="text-center">修改时间</th>
         <th class="text-center">操作</th>
@@ -47,7 +47,7 @@ $this->breadcrumbs = array($this->pageTitle);
         <tr>
             <td style="text-align:center;vertical-align: middle"><?php echo $v->id; ?></td>
             <td class="text-center"><?=$v->no?></td>
-            <td class="text-center"><?=ProBlindExt::$types[$v->type]?></td> 
+            <td class="text-center"><?=$v->name?></td> 
             <td class="text-center"><?=date('Y-m-d',$v->created)?></td>
             <td class="text-center"><?=date('Y-m-d',$v->updated)?></td>
             <td style="text-align:center;vertical-align: middle">

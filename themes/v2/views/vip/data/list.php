@@ -18,7 +18,7 @@ $this->breadcrumbs = array( $this->pageTitle);
     <?php foreach($infos as $k=>$v): ?>
         <tr>
             <td class="text-center"><?=$v->title?></td>
-            <td class="text-center"><?=$v->sjlx.'/'.$v->mflx?></td>
+            <td class="text-center"><?=$v->sjlx.'/'.ProExt::$mang[$v->mflx]?></td>
             <td class="text-center"><?=ProHospitalExt::model()->find("hid=".$this->hospital->id." and pid=".$v->id)->num?></td>
             <td class="text-center"><?=DataExt::model()->count("hid=".$this->hospital->id." and pid=".$v->id)?></td>
             <td class="text-center"><?php echo Yii::app()->db->createCommand("select no from ill where pid=".$v->id." order by created desc limit 1")->queryScalar() ?></td>

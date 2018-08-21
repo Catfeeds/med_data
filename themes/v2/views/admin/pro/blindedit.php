@@ -23,17 +23,17 @@ $this->breadcrumbs = array($this->pageTitle);
     <div class="col-md-2"><?php echo $form->error($article, 'no') ?></div>
 </div>
 <div class="form-group">
-    <label class="col-md-2 control-label">组别</label>
+    <label class="col-md-2 control-label">分组名</label>
     <div class="col-md-4">
-        <?php echo $form->radioButtonList($article, 'type', ProBlindExt::$types, array('separator' => '')); ?>
+        <?php echo $form->textField($article, 'name', array('class' => 'form-control')); ?>
     </div>
-    <div class="col-md-2"><?php echo $form->error($article, 'type') ?></div>
+    <div class="col-md-2"><?php echo $form->error($article, 'name') ?></div>
 </div>
 <div class="form-actions">
     <div class="row">
         <div class="col-md-offset-3 col-md-9">
             <button type="submit" class="btn green">保存</button>
-            <?php echo CHtml::link('返回',$this->createUrl('bindlist',['pid'=>$info->id]), array('class' => 'btn default')) ?>
+            <?php echo CHtml::link('返回',$this->createUrl('blindlist',['pid'=>$info->id]), array('class' => 'btn default')) ?>
         </div>
     </div>
 </div>
