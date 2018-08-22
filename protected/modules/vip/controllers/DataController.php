@@ -224,4 +224,9 @@ class DataController extends VipController{
 
 		$this->render('editinfo',['pinfo'=>ProExt::model()->findByPk($pid),'article'=>$info]);
 	}
+	public function actionApplyPo($id='')
+	{
+		$ill = IllExt::model()->findByPk($id);
+		var_dump($ill);exit;
+	}
 }

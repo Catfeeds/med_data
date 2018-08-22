@@ -42,7 +42,6 @@ $this->breadcrumbs = array($this->pageTitle);
         $problind = ProBlindExt::model()->find("pid=$pid and no=".$v->no);
         if($problind)
             $mangword = $problind->name;
-
     } ?>
         <tr>
             <td  class="text-center"><?php echo $v->name ?></td>

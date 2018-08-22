@@ -12,6 +12,7 @@
  * @property string $data_conf
  * @property string $name
  * @property string $addr
+ * @property integer $time
  * @property string $phone
  * @property string $birth
  * @property integer $sex
@@ -37,7 +38,7 @@ class CaseData extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('created', 'required'),
-			array('cid, did, hid, sex, created, updated', 'numerical', 'integerOnly'=>true),
+			array('cid, did, hid, time, sex, created, updated', 'numerical', 'integerOnly'=>true),
 			array('image', 'length', 'max'=>255),
 			array('name, addr', 'length', 'max'=>100),
 			array('phone', 'length', 'max'=>20),
@@ -45,7 +46,7 @@ class CaseData extends CActiveRecord
 			array('data_conf', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, cid, did, hid, image, data_conf, name, addr, phone, birth, sex, created, updated', 'safe', 'on'=>'search'),
+			array('id, cid, did, hid, image, data_conf, name, addr, time, phone, birth, sex, created, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -74,6 +75,7 @@ class CaseData extends CActiveRecord
 			'data_conf' => 'Data Conf',
 			'name' => 'Name',
 			'addr' => 'Addr',
+			'time' => 'Time',
 			'phone' => 'Phone',
 			'birth' => 'Birth',
 			'sex' => 'Sex',
@@ -108,6 +110,7 @@ class CaseData extends CActiveRecord
 		$criteria->compare('data_conf',$this->data_conf,true);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('addr',$this->addr,true);
+		$criteria->compare('time',$this->time);
 		$criteria->compare('phone',$this->phone,true);
 		$criteria->compare('birth',$this->birth,true);
 		$criteria->compare('sex',$this->sex);
