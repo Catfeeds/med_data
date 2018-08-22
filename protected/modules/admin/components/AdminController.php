@@ -77,6 +77,7 @@ class AdminController extends Controller
             ['label' => '数据管理', 'icon' => 'icon-speedometer', 'items' => [
                 ['label' => '项目数据管理', 'url' => ['/admin/ill/list']],
                 ['label' => '病例数据管理', 'url' => ['/admin/ill/caselist']],
+                ['label' => '数据流水', 'url' => ['/admin/ill/log']],
             ]],
             ['label'=>'数据统计','icon'=>'icon-speedometer','url'=>['/admin/count/list'],'active'=>$this->route=='admin/count/edit'],
             ['label' => '病例标签库管理', 'icon' => 'icon-speedometer', 'items' => [

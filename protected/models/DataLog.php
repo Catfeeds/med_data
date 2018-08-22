@@ -7,6 +7,9 @@
  * @property integer $id
  * @property integer $uid
  * @property integer $did
+ * @property integer $is_admin
+ * @property integer $pid
+ * @property integer $hid
  * @property integer $type
  * @property integer $created
  * @property integer $updated
@@ -29,11 +32,11 @@ class DataLog extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, created', 'required'),
-			array('id, uid, did, type, created, updated', 'numerical', 'integerOnly'=>true),
+			array('created', 'required'),
+			array('uid, did, is_admin, pid, hid, type, created, updated', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, uid, did, type, created, updated', 'safe', 'on'=>'search'),
+			array('id, uid, did, is_admin, pid, hid, type, created, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -57,6 +60,9 @@ class DataLog extends CActiveRecord
 			'id' => 'ID',
 			'uid' => 'Uid',
 			'did' => 'Did',
+			'is_admin' => 'Is Admin',
+			'pid' => 'Pid',
+			'hid' => 'Hid',
 			'type' => 'Type',
 			'created' => 'Created',
 			'updated' => 'Updated',
@@ -84,6 +90,9 @@ class DataLog extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('uid',$this->uid);
 		$criteria->compare('did',$this->did);
+		$criteria->compare('is_admin',$this->is_admin);
+		$criteria->compare('pid',$this->pid);
+		$criteria->compare('hid',$this->hid);
 		$criteria->compare('type',$this->type);
 		$criteria->compare('created',$this->created);
 		$criteria->compare('updated',$this->updated);

@@ -93,7 +93,7 @@ class DataController extends VipController{
 
 		// $info = $this->company;
 		if(Yii::app()->request->getIsPostRequest()) {
-			// var_dump($_POST['ids']);exit;
+			// var_dump($_POST);exit;
 			$vs = $_POST;
 			$ids = array_filter($vs['ids']);
 			$idarr = [];
@@ -116,6 +116,7 @@ class DataController extends VipController{
 					if($value && is_array($value)) {
 						foreach ($value as $k => $v) {
 							$vv = 'v'.$k;
+
 							$obj->$vv = $v;
 						}
 					}
@@ -143,7 +144,19 @@ class DataController extends VipController{
 				$obj->ptid = $taginfo->id;
 				$obj->did = Yii::app()->user->id;
 				$obj->hid = Yii::app()->user->hid;
-				$obj->save();
+				if(!$obj->save()) {
+					$this->setMessage(current(current($obj->getErrors())),'error');
+
+				}
+			}
+			$objd = new DataLogExt;
+			$objd->uid = Yii::app()->user->id;
+			$objd->did = $iid;
+			$objd->hid = Yii::app()->user->hid;
+			$objd->pid = $pid;
+			$objd->type = 1;
+			if(!$objd->save()) {
+				$this->setMessage(current(current($objd->getErrors())),'error');
 			}
 			// $info->attributes = Yii::app()->request->getPost($modelName,[]);
 			
@@ -159,16 +172,19 @@ class DataController extends VipController{
 		// var_dump(count($datas));exit;
 		if($datas) {
 			foreach ($datas as $key => $value) {
+				$dt = json_decode($value->data_conf,true);
+				// var_dump($value->data_conf);exit;
 				// 内置标签
 				if($value->is_tag) {
 					$dataarr[$value->ppid][$value->pmid][$value->ptid] = ['id'=>$value->id,'data'=>$value->data,'lcyy'=>$value->lcyy,'nci'=>$value->nci];
 				} else {
 					foreach (range(1, 10) as $n) {
 						$nv = 'v'.$n;
-						$tmp[$n] = $value->$nv;
+						$tmp[$n] = isset($dt[$nv])?$dt[$nv]:'';
 						// $dataarr[$value->ppid][$value->pmid][$value->ptid][$n] = ['id'=>$value->id,'data'=>[$n=>$value->$nv]];
 					}
 					$dataarr[$value->ppid][$value->pmid][$value->ptid] = ['id'=>$value->id,'data'=>$tmp];
+					unset($tmp);
 				}
 			}
 		}

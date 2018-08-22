@@ -202,8 +202,18 @@ class IllController extends AdminController{
 				$obj->pmid = $taginfo->pcid;
 				$obj->ptid = $taginfo->id;
 				$obj->did = Yii::app()->user->id;
-				$obj->hid = Yii::app()->user->hid;
+				// $obj->hid = Yii::app()->user->hid;
 				$obj->save();
+			}
+			$objd = new DataLogExt;
+			$objd->uid = Yii::app()->user->id;
+			$objd->did = $iid;
+			$objd->hid = '';
+			$objd->pid = $pid;
+			$objd->type = 1;
+			$objd->is_admin = 1;
+			if(!$objd->save()) {
+				$this->setMessage(current(current($objd->getErrors())),'error');
 			}
 			// $info->attributes = Yii::app()->request->getPost($modelName,[]);
 			
@@ -245,6 +255,48 @@ class IllController extends AdminController{
 		$criteria->addInCondition('id',$ids);
 		$infos = CaseDataExt::model()->findAll($criteria);
 		$this->render('allcase',['infos'=>$infos]);
+	}
+
+	public function actionLog($type='title',$value='',$time_type='created',$time='',$cate='',$cate1='')
+	{
+		$modelName = 'DataLogExt';
+		$criteria = new CDbCriteria;
+		if($value = trim($value))
+            if ($type=='title') {
+            	$ids = [];
+            	$cre = new CDbCriteria;
+
+                $cre->addSearchCondition('name', $value);
+                $ress = HospitalExt::model()->findAll($cre);
+                if($ress) {
+                	foreach ($ress as $res) {
+                		$ids[] = $res['id'];
+                	}
+                }
+                $criteria->addInCondition('hid',$ids);
+            } 
+        //添加时间、刷新时间筛选
+        if($time_type!='' && $time!='')
+        {
+            list($beginTime, $endTime) = explode('-', $time);
+            $beginTime = (int)strtotime(trim($beginTime));
+            $endTime = (int)strtotime(trim($endTime));
+            $criteria->addCondition("{$time_type}>=:beginTime");
+            $criteria->addCondition("{$time_type}<:endTime");
+            $criteria->params[':beginTime'] = TimeTools::getDayBeginTime($beginTime);
+            $criteria->params[':endTime'] = TimeTools::getDayEndTime($endTime);
+
+        }
+		if($cate) {
+			$criteria->addCondition('lid=:cid');
+			$criteria->params[':cid'] = $cate;
+		}
+		if($cate1) {
+			$criteria->addCondition('tid=:cid');
+			$criteria->params[':cid'] = $cate1;
+		}
+		$infos = $modelName::model()->getList($criteria,20);
+		$this->render('log',['cate'=>$cate,'cate1'=>$cate1,'infos'=>$infos->data,'cates'=>$this->cates,'cates1'=>$this->cates1,'pager'=>$infos->pagination,'type' => $type,'value' => $value,'time' => $time,'time_type' => $time_type,]);
 	}
 
 }

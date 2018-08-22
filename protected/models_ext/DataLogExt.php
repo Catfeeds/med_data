@@ -15,7 +15,9 @@ class DataLogExt extends DataLog{
     {
         return array(
             // 'product'=>array(self::BELONGS_TO, 'UserExt', 'pid'),
-            'user'=>array(self::BELONGS_TO, 'UserExt', 'uid'),
+            'user'=>array(self::BELONGS_TO, 'DoctorExt', 'uid'),
+            'hospital'=>array(self::BELONGS_TO, 'HospitalExt', 'hid'),
+            'pro'=>array(self::BELONGS_TO, 'ProExt', 'pid'),
         );
     }
 
@@ -92,10 +94,7 @@ class DataLogExt extends DataLog{
         $info = [];
         switch ($this->type) {
             case '1':
-                $model = 'DataExt';
-                break;
-            case '2':
-                $model = 'CaseDataExt';
+                $model = 'IllExt';
                 break;
             default:
                 # code...
