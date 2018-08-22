@@ -178,13 +178,34 @@ class ProController extends AdminController{
 		$modelName = "ProBlindExt";
 		$info = $id ? $modelName::model()->findByPk($id) : new $modelName;
 		if(Yii::app()->request->getIsPostRequest()) {
-			$info->attributes = Yii::app()->request->getPost($modelName,[]);
-			$info->pid = $pid;
-			if($info->save()) {
+			$url = Yii::app()->request->getPost('url','');
+			if($url) {
+				$ress = ExcelHelper::read($url);
+				if(isset($ress[0]) && $ress[0]) {
+					foreach ($ress[0] as $res) {
+						if($res) {
+							$res = array_values($res);
+							// var_dump($res);exit;
+							$obj = new ProBlindExt;
+							$obj->no = $res[0];
+							$obj->name = $res[1];
+							$obj->pid = $pid;
+							$obj->save();
+						}
+						
+					}
+				}
 				$this->setMessage('操作成功','success',['blindlist?pid='.$pid]);
 			} else {
-				$this->setMessage(array_values($info->errors)[0][0],'error');
+				$info->attributes = Yii::app()->request->getPost($modelName,[]);
+				$info->pid = $pid;
+				if($info->save()) {
+					$this->setMessage('操作成功','success',['blindlist?pid='.$pid]);
+				} else {
+					$this->setMessage(array_values($info->errors)[0][0],'error');
+				}
 			}
+				
 		} 
 		$this->render('blindedit',['cates'=>$this->cates,'article'=>$info,'info'=>ProExt::model()->findByPk($pid),'cates1'=>$this->cates1,]);
 	}
@@ -522,4 +543,5 @@ class ProController extends AdminController{
 		// var_dump($edata);exit;
 		ExcelHelper::cvs_write_browser(date("YmdHis",time()),$pes,$edata); 
 	}
+
 }

@@ -29,6 +29,13 @@ $this->breadcrumbs = array($this->pageTitle);
     </div>
     <div class="col-md-2"><?php echo $form->error($article, 'name') ?></div>
 </div>
+<div class="form-group">
+    <label class="col-md-2 control-label">导入地址</label>
+    <div class="col-md-4">
+        <input type="text" class="form-control" name="url">
+    </div>
+    <div class="col-md-2"></div>
+</div>
 <div class="form-actions">
     <div class="row">
         <div class="col-md-offset-3 col-md-9">

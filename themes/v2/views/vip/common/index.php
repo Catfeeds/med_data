@@ -97,7 +97,7 @@ $this->pageTitle = '常州制药厂病例数据录入系统欢迎您！';
                                                          <?php $hisf = DataExt::model()->count("hid=".$h->id." and pid=".$value->id);echo $hisf;?>
                                                     </td>
                                                     <td>
-                                                         <span class="bold theme-font"><?=$hisall?(int)$hisf/$hisall:0?>%</span>
+                                                         <span class="bold theme-font"><?=$hisall?round($hisf/$hisall,2):0?>%</span>
                                                     </td>
                                                     <td>
                                                          <?=$proh->is_major?'组长':'组员'?>

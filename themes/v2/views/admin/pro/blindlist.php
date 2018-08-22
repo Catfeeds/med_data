@@ -20,9 +20,6 @@ $this->breadcrumbs = array($this->pageTitle);
         </form>
     </div>
     <div class="pull-right">
-        <a href="" class="btn red">
-            导入盲表
-        </a>
         <a href="<?php echo $this->createAbsoluteUrl('blindedit',['pid'=>$pid]) ?>" class="btn blue">
             添加盲表 <i class="fa fa-plus"></i>
         </a>
