@@ -1,5 +1,5 @@
 <?php
-$this->pageTitle = '参与机构列表';
+$this->pageTitle = '机构数据查看权限列表';
 $this->breadcrumbs = array($this->pageTitle);
 ?>
 <div class="table-toolbar">
@@ -20,11 +20,11 @@ $this->breadcrumbs = array($this->pageTitle);
         </form>
     </div>
     <div class="pull-right">
-        <a href="<?php echo $this->createAbsoluteUrl('hospitaledit',['pid'=>$pid]) ?>" class="btn blue">
-            添加参与机构 <i class="fa fa-plus"></i>
+        <a href="<?php echo $this->createAbsoluteUrl('hospitallist',['pid'=>$pid]) ?>" class="btn yellow">
+            返回机构列表 
         </a>
-        <a href="<?php echo $this->createAbsoluteUrl('list') ?>" class="btn yellow">
-            返回项目列表 
+        <a href="<?php echo $this->createAbsoluteUrl('applyedit',['hid'=>$hid,'pid'=>$pid]) ?>" class="btn green">
+            添加被查看数据机构 
         </a>
     </div>
 </div>
@@ -32,12 +32,11 @@ $this->breadcrumbs = array($this->pageTitle);
     <thead class="flip-content">
     <tr>
         <th class="text-center">ID</th>
-        <th class="text-center">机构名</th>
-        <th class="text-center">承担例数</th>
-        <th class="text-center">身份</th>
+        <th class="text-center">机构</th>
+        <th class="text-center">项目</th>
+        <th class="text-center">被查看机构</th>
         <th class="text-center">添加时间</th>
         <th class="text-center">修改时间</th>
-        <th class="text-center">状态</th>
         <th class="text-center">操作</th>
     </tr>
     </thead>
@@ -46,15 +45,12 @@ $this->breadcrumbs = array($this->pageTitle);
         <tr>
             <td style="text-align:center;vertical-align: middle"><?php echo $v->id; ?></td>
             <td class="text-center"><?=$v->hospital?$v->hospital->name:''?></td>
-            <td class="text-center"><?=$v->num?></td> 
-            <td class="text-center"><?=$v->getSf()?></td>
+            <td class="text-center"><?=$v->pro?$v->pro->title:''?></td>
+            <td class="text-center"><?=$v->bhospital?$v->bhospital->name:''?></td> 
             <td class="text-center"><?=date('Y-m-d',$v->created)?></td>
             <td class="text-center"><?=date('Y-m-d',$v->updated)?></td>
-            <td class="text-center"><?php echo CHtml::ajaxLink(UserExt::$status[$v->status],$this->createUrl('changeStatus'), array('type'=>'get', 'data'=>array('id'=>$v->id,'class'=>get_class($v)),'success'=>'function(data){location.reload()}'), array('class'=>'btn btn-sm '.UserExt::$statusStyle[$v->status])); ?></td>
-
             <td style="text-align:center;vertical-align: middle">
-                <a href="<?php echo $this->createUrl('applylist',array('hid'=>$v->hid,'pid'=>$pid)); ?>" class="btn default btn-xs blue">  权限管理 </a>
-                <a href="<?php echo $this->createUrl('hospitaledit',array('id'=>$v->id,'pid'=>$pid)); ?>" class="btn default btn-xs green"><i class="fa fa-edit"></i> 修改 </a>
+                <a href="<?php echo $this->createUrl('applyedit',array('id'=>$v->id,'pid'=>$pid,'hid'=>$hid)); ?>" class="btn default btn-xs green"><i class="fa fa-edit"></i> 修改 </a>
                 <?php echo CHtml::htmlButton('删除', array('data-toggle'=>'confirmation', 'class'=>'btn btn-xs red', 'data-title'=>'确认删除？', 'data-btn-ok-label'=>'确认', 'data-btn-cancel-label'=>'取消', 'data-popout'=>true,'ajax'=>array('url'=>$this->createUrl('del'),'type'=>'get','success'=>'function(data){location.reload()}','data'=>array('id'=>$v->id,'class'=>get_class($v)))));?>
 
 

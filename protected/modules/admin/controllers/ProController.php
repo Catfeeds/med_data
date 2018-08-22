@@ -189,6 +189,63 @@ class ProController extends AdminController{
 		$this->render('blindedit',['cates'=>$this->cates,'article'=>$info,'info'=>ProExt::model()->findByPk($pid),'cates1'=>$this->cates1,]);
 	}
 
+	public function actionApplylist($type='title',$value='',$time_type='created',$time='',$cate='',$pid='',$hid='')
+	{
+		$modelName = "HospitalApplyExt";
+		$criteria = new CDbCriteria;
+		$criteria->addCondition("pid=$pid and hid=$hid");
+		if($value = trim($value))
+            if ($type=='title') {
+            	$ids = [];
+            	$cre = new CDbCriteria;
+
+                $cre->addSearchCondition('title', $value);
+                $ress = ProExt::model()->findAll($cre);
+                if($ress) {
+                	foreach ($ress as $res) {
+                		$ids[] = $res['id'];
+                	}
+                }
+                $criteria->addInCondition('id',$ids);
+            } 
+        //添加时间、刷新时间筛选
+        if($time_type!='' && $time!='')
+        {
+            list($beginTime, $endTime) = explode('-', $time);
+            $beginTime = (int)strtotime(trim($beginTime));
+            $endTime = (int)strtotime(trim($endTime));
+            $criteria->addCondition("{$time_type}>=:beginTime");
+            $criteria->addCondition("{$time_type}<:endTime");
+            $criteria->params[':beginTime'] = TimeTools::getDayBeginTime($beginTime);
+            $criteria->params[':endTime'] = TimeTools::getDayEndTime($endTime);
+
+        }
+		if($cate) {
+			$criteria->addCondition('lid=:cid');
+			$criteria->params[':cid'] = $cate;
+		}
+		$infos = $modelName::model()->getList($criteria,20);
+		$this->render('applylist',['cate'=>$cate,'infos'=>$infos->data,'cates'=>$this->cates,'pager'=>$infos->pagination,'type' => $type,'value' => $value,'time' => $time,'time_type' => $time_type,'pid'=>$pid,'hid'=>$hid]);
+	}
+
+	public function actionApplyedit($id='',$pid='',$hid='')
+	{
+		$modelName = "HospitalApplyExt";
+		$info = $id ? $modelName::model()->findByPk($id) : new $modelName;
+		if(Yii::app()->request->getIsPostRequest()) {
+			$info->attributes = Yii::app()->request->getPost($modelName,[]);
+			$info->pid = $pid;
+			$info->hid = $hid;
+
+			if($info->save()) {
+				$this->setMessage('操作成功','success',['applylist?pid='.$pid.'&hid='.$hid]);
+			} else {
+				$this->setMessage(array_values($info->errors)[0][0],'error');
+			}
+		} 
+		$this->render('applyedit',['cates'=>$this->cates,'article'=>$info,'info'=>ProExt::model()->findByPk($pid),'cates1'=>$this->cates1,'pid'=>$pid,'hid'=>$hid]);
+	}
+
 	public function actionPeriodlist($type='title',$value='',$time_type='created',$time='',$cate='',$pid='')
 	{
 		$modelName = "ProPeriodExt";
@@ -361,9 +418,17 @@ class ProController extends AdminController{
 
 	public function actionPlist($id='',$mid='')
 	{
+		$type = Yii::app()->request->getQuery('type',[]);
+		$criteria = new CDbCriteria;
+
 		$tag = ProCateTagExt::model()->findByPk($id);
 		// 所有jieduan
 		$pro = $tag->pro;
+		$criteria->addCondition("t.pid=".$pro->id);
+		
+		if($type) {
+			$criteria->addInCondition('hid',$type);
+		}
 		$ottags = Yii::app()->db->createCommand("select ppid,id from pro_cate_tag where name='".$tag->name."' and pid=".$pro->id)->queryAll();
 		$petarr = [];
 		$ppidarr = [];
@@ -376,11 +441,12 @@ class ProController extends AdminController{
 		// var_dump($petarr);exit;
 		$data = [];
 		$pes = [];
-		$datas = DataExt::model()->with('period')->findAll("t.pid=".$pro->id);
+		$datas = DataExt::model()->with('period')->findAll($criteria);
 		// var_dump(count($datas));exit;
 		if($ppidarr && $datas)
 			foreach ($datas as $key => $value) {
-				!in_array($value->period->name, $pes) && $pes[] = $value->period->name;
+				if(!in_array($value->period->name, $pes) && in_array($value->ppid, $ppidarr))
+					$pes[] = $value->period->name;
 				foreach ($ppidarr as $ppid) {
 					if($value->ppid==$ppid) {
 						$data[$value->iid][$value->ppid] = $value->data;
@@ -392,14 +458,22 @@ class ProController extends AdminController{
 				// }
 			}
 		// var_dump($data);exit;
-		$this->render('plist',['datas'=>$data,'pes'=>$pes,'ppids'=>$ppidarr,'mid'=>$mid,'thisid'=>$id]);
+		$this->render('plist',['datas'=>$data,'pes'=>$pes,'ppids'=>$ppidarr,'mid'=>$mid,'thisid'=>$id,'type'=>$type]);
 	}
 
 	public function actionExport($id='')
 	{
+		$type = Yii::app()->request->getQuery('type',[]);
+		$criteria = new CDbCriteria;
+
 		$tag = ProCateTagExt::model()->findByPk($id);
 		// 所有jieduan
 		$pro = $tag->pro;
+		$criteria->addCondition("t.pid=".$pro->id);
+		
+		if($type) {
+			$criteria->addInCondition('hid',$type);
+		}
 		$ottags = Yii::app()->db->createCommand("select ppid,id from pro_cate_tag where name='".$tag->name."' and pid=".$pro->id)->queryAll();
 		$petarr = [];
 		$ppidarr = [];
@@ -413,16 +487,21 @@ class ProController extends AdminController{
 		$data = [];
 		$pes = [];
 		$pes[] = '患者id';
-		$datas = DataExt::model()->with('period')->findAll("t.pid=".$pro->id);
+		$datas = DataExt::model()->with('period')->findAll($criteria);
 		// var_dump(count($datas));exit;
 		if($ppidarr && $datas)
 			foreach ($datas as $key => $value) {
-				!in_array($value->period->name, $pes) && $pes[] = $value->period->name;
+				if(!in_array($value->period->name, $pes) && in_array($value->ppid, $ppidarr))
+					$pes[] = $value->period->name;
 				foreach ($ppidarr as $ppid) {
 					if($value->ppid==$ppid) {
 						$data[$value->iid][$value->ppid] = $value->data;
 					} 
 				}
+				// if(in_array($value->ptid, array_keys($petarr))) {
+
+				// 	$data[$value->iid][] = [$value->period->name=>$value->data];
+				// }
 			}
 
 		$edata = [];

@@ -4,9 +4,9 @@
  * @author steven.allen <[<email address>]>
  * @date(2017.2.12)
  */
-class ProBlindUserExt extends ProBlindUser{
+class HospitalApplyExt extends HospitalApply{
     public static $status = [
-        '未破盲','已破盲'
+        '禁用','启用'
     ];
 	/**
      * 定义关系
@@ -14,16 +14,13 @@ class ProBlindUserExt extends ProBlindUser{
     public function relations()
     {
          return array(
-            'user'=>array(self::BELONGS_TO, 'DoctorExt', 'uid'),
-            'blind'=>array(self::BELONGS_TO, 'ProBlindExt', 'pbid'),
+            'hospital'=>array(self::BELONGS_TO, 'HospitalExt', 'hid'),
+            'bhospital'=>array(self::BELONGS_TO, 'HospitalExt', 'bhid'),
             'pro'=>array(self::BELONGS_TO, 'ProExt', 'pid'),
-            'ill'=>array(self::BELONGS_TO, 'IllExt', 'did'),
+            'pro_hospitals'=>array(self::HAS_MANY, 'ProHospitalExt', 'hid'),
+            'pros'=>array(self::MANY_MANY, 'ProExt', 'pro_hospital(hid,pid)'),
         );
     }
-
-    public static $types = [
-        '实验组','对照组'
-    ];
 
     /**
      * @return array 验证规则
@@ -52,15 +49,16 @@ class ProBlindUserExt extends ProBlindUser{
     }
 
     public function beforeValidate() {
-        if($this->pid && $this->ill && !$this->pbid) {
-            $no = $this->ill->no;
-            $obj = ProBlindExt::model()->find("no=$no and pid=".$this->pid);
-            $obj && $this->pbid = $obj->id;
-        }
         if($this->getIsNewRecord()) {
+
+            // $res = Yii::app()->controller->sendNotice(($this->plot?$this->plot->title:'').'有新举报，举报原因为：'.$this->reason.'，请登陆后台审核','',1);
+            
             $this->created = $this->updated = time();
         }
         else {
+            // if($this->status==1&&Yii::app()->db->createCommand("select status from report where id=".$this->id)->queryScalar()==0) {
+                
+            // }
             $this->updated = time();
         }
         return parent::beforeValidate();

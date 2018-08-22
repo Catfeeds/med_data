@@ -1,33 +1,24 @@
 <?php
 
 /**
- * This is the model class for table "ill".
+ * This is the model class for table "hospital_apply".
  *
- * The followings are the available columns in table 'ill':
+ * The followings are the available columns in table 'hospital_apply':
  * @property integer $id
- * @property string $name
- * @property string $no
- * @property string $med_no
- * @property string $birth
- * @property integer $sex
  * @property integer $hid
- * @property string $height
- * @property string $weight
- * @property string $addr
- * @property string $phone
- * @property integer $time
  * @property integer $pid
+ * @property integer $bhid
  * @property integer $created
  * @property integer $updated
  */
-class Ill extends CActiveRecord
+class HospitalApply extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'ill';
+		return 'hospital_apply';
 	}
 
 	/**
@@ -39,13 +30,10 @@ class Ill extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('created', 'required'),
-			array('sex, hid, time, pid, created, updated', 'numerical', 'integerOnly'=>true),
-			array('name, no, med_no, birth, addr', 'length', 'max'=>100),
-			array('height, weight', 'length', 'max'=>10),
-			array('phone', 'length', 'max'=>20),
+			array('hid, pid, bhid, created, updated', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, name, no, med_no, birth, sex, hid, height, weight, addr, phone, time, pid, created, updated', 'safe', 'on'=>'search'),
+			array('id, hid, pid, bhid, created, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -67,18 +55,9 @@ class Ill extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'name' => 'Name',
-			'no' => 'No',
-			'med_no' => 'Med No',
-			'birth' => 'Birth',
-			'sex' => 'Sex',
 			'hid' => 'Hid',
-			'height' => 'Height',
-			'weight' => 'Weight',
-			'addr' => 'Addr',
-			'phone' => 'Phone',
-			'time' => 'Time',
 			'pid' => 'Pid',
+			'bhid' => 'Bhid',
 			'created' => 'Created',
 			'updated' => 'Updated',
 		);
@@ -103,18 +82,9 @@ class Ill extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('no',$this->no,true);
-		$criteria->compare('med_no',$this->med_no,true);
-		$criteria->compare('birth',$this->birth,true);
-		$criteria->compare('sex',$this->sex);
 		$criteria->compare('hid',$this->hid);
-		$criteria->compare('height',$this->height,true);
-		$criteria->compare('weight',$this->weight,true);
-		$criteria->compare('addr',$this->addr,true);
-		$criteria->compare('phone',$this->phone,true);
-		$criteria->compare('time',$this->time);
 		$criteria->compare('pid',$this->pid);
+		$criteria->compare('bhid',$this->bhid);
 		$criteria->compare('created',$this->created);
 		$criteria->compare('updated',$this->updated);
 
@@ -127,7 +97,7 @@ class Ill extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Ill the static model class
+	 * @return HospitalApply the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

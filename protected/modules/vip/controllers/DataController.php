@@ -21,6 +21,17 @@ class DataController extends VipController{
 		$modelName = 'IllExt';
 		$criteria = new CDbCriteria;
 		$criteria->addCondition('pid='.$pid);
+		// 如果有机构绑定关系
+		$bhids = [];
+		$bhids[] = Yii::app()->user->hid;
+		if($bhs = HospitalApplyExt::model()->findAll("pid=$pid and hid=".Yii::app()->user->hid)) {
+			// $bhids = [];
+			foreach ($bhs as $bh) {
+				$bhids[] = $bh->bhid;
+			}
+
+		}
+		$criteria->addInCondition('hid',$bhids);
 		if($value = trim($value))
             if ($type=='title') {
                 $criteria->addSearchCondition('name', $value);
@@ -194,6 +205,7 @@ class DataController extends VipController{
 			$info->attributes = Yii::app()->request->getPost('IllExt',[]);
 			// $info->did = Yii::app()->user->id;
 			$info->pid = $pid;
+			$info->hid = Yii::app()->user->hid;
 			// $info->hid = $this->hospital->id;
 			if($info->save()) {
 				$this->setMessage('操作成功','success',['edit?iid='.$info->id.'&pid='.$pid]);
@@ -224,9 +236,25 @@ class DataController extends VipController{
 
 		$this->render('editinfo',['pinfo'=>ProExt::model()->findByPk($pid),'article'=>$info]);
 	}
-	public function actionApplyPo($id='')
+
+	public function actionApplyPo($iid='',$id='')
 	{
-		$ill = IllExt::model()->findByPk($id);
-		var_dump($ill);exit;
+		$ill = IllExt::model()->findByPk($iid);
+		$info = $id ? ProBlindUserExt::model()->findByPk($id) : new ProBlindUserExt;
+		if(Yii::app()->request->getIsPostRequest()) {
+			$info->attributes = Yii::app()->request->getPost('ProBlindUserExt',[]);
+			$info->uid = Yii::app()->user->id;
+			$info->did = $iid;
+			$info->pid = $ill->pid;
+			if($info->save()) {
+				$this->setMessage('操作成功','success',['ilist?pid='.$ill->pid]);
+			} else {
+				$this->setMessage(current(current($info->getErrors())),'error');
+			}
+		} 
+
+		
+		$this->render('applyPo',['ill'=>$ill,'article'=>$info]);
+		// var_dump($ill);exit;
 	}
 }

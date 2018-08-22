@@ -3,6 +3,19 @@ $this->pageTitle = '数据汇总';
 $this->breadcrumbs = array($this->pageTitle);
 ?>
 <div class="table-toolbar">
+    <div class="btn-group pull-left">
+        <form class="form-inline form-horizontal">
+            <div class="form-group" style="width: 600px">
+                <div class="col-md-12">
+                 <?php echo CHtml::dropDownList('type',$type,CHtml::listData(HospitalExt::model()->findAll(),'id','name'), array('style'=>'min-width:200px','class'=>'form-control select2','encode'=>false,'multiple'=>'multiple','placeholder'=>'请选择机构')); ?>
+                </div>
+            </div>
+            <button type="submit" class="btn blue">搜索</button>
+            <a class="btn yellow" onclick="removeOptions()"><i class="fa fa-trash"></i>&nbsp;清空</a>
+            <input type="hidden" name="mid" value="<?=$mid?>">
+            <input type="hidden" name="id" value="<?=$thisid?>">
+        </form>
+    </div>
     <div class="pull-right">
         <a target="_blank" href="<?php echo $this->createAbsoluteUrl('export',['id'=>$thisid]) ?>" class="btn yellow">
             导出数据
@@ -34,85 +47,107 @@ $this->breadcrumbs = array($this->pageTitle);
     <?php endforeach;?>
     </tbody>
 </table>
-<script>
-<?php Tools::startJs(); ?>
-    setInterval(function(){
-        $('#AdminIframe').height($('#AdminIframe').contents().find('body').height());
-        var $panel_title = $('#fade-title');
-        $panel_title.html($('#AdminIframe').contents().find('title').html());
-    },200);
-    function do_admin(ts){
-        $('#AdminIframe').attr('src',ts.data('url')).load(function(){
-            self = this;
-            //延时100毫秒设定高度
-            $('#Admin').modal({ show: true, keyboard:false });
-            $('#Admin .modal-dialog').css({width:'1000px'});
-        });
-    }
-    function set_sort(_this, id, sort){
-            $.getJSON('<?php echo $this->createUrl('/admin/league/setSort')?>',{id:id,sort:sort,class:'<?=isset($infos[0])?get_class($infos[0]):''?>'},function(dt){
-                location.reload();
-            });
-        }
-    function do_sort(ts){
-        if(ts.which == 13){
-            _this = $(ts.target);
-            sort = _this.val();
-            id = _this.parent().data('id');
-            set_sort(_this, id, sort);
-        }
-    }
 
-    $(document).on('click',function(e){
-          var target = $(e.target);
-          if(!target.hasClass('sort_edit')){
-             $('.sort_edit').trigger($.Event( 'keypress', 13 ));
-          }
-    });
-    $('.sort_edit').click(function(){
-        if($(this).find('input').length <1){
-            $(this).html('<input type=\"text\" value=\"' + $(this).html() + '\" class=\"form-control input-sm sort_edit\" onkeypress=\"return do_sort(event)\" onblur=\"set_sort($(this),$(this).parent().data(\'id\'),$(this).val())\">');
-            $(this).find('input').select();
-        }
-    });
-    var getChecked  = function(){
-        var ids = "";
-        $(".checkboxes").each(function(){
-            if($(this).parents('span').hasClass("checked")){
-                if(ids == ''){
-                    ids = $(this).val();
-                } else {
-                    ids = ids + ',' + $(this).val();
+
+<?php
+//Select2
+Yii::app()->clientScript->registerScriptFile('/static/global/plugins/select2/select2.min.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerCssFile('/static/global/plugins/select2/select2.css');
+Yii::app()->clientScript->registerCssFile('/static/admin/pages/css/select2_custom.css');
+
+//boostrap datetimepicker
+Yii::app()->clientScript->registerCssFile('/static/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css');
+Yii::app()->clientScript->registerScriptFile('/static/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile('/static/global/plugins/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js', CClientScript::POS_END, array('charset'=> 'utf-8'));
+
+// Yii::app()->clientScript->registerScriptFile('/static/global/plugins/bootbox/bootbox.min.js', CClientScript::POS_END);
+
+$js = "
+
+    var getHousesAjax =
+     {
+        url: '".$this->createUrl('/admin/plot/AjaxGetHouse')."',"."
+        dataType: 'json',
+        delay: 250,
+        data: function (params) {
+            return {
+                kw:params
+            };
+        },
+        results:function(data){
+            var items = [];
+
+             $.each(data.results,function(){
+                var tmp = {
+                    id : this.id,
+                    text : this.name
                 }
-            }
-        });
-        return ids;
-    }
-
-    $(".group-checkable").click(function () {
-        var set = $(this).attr("data-set");
-        $(set).each(function () {
-            $(this).attr("checked", !$(this).attr("checked"));
-        });
-        $.uniform.update(set);
-    });
-    //清空选项
-    function removeOptions()
-    {
-        // alert($('.chose_select').val());
-        $('.chose_text').val('');
-        $('.chose_select').val('');
-    }
-
-    $("#hname").on("dblclick",function(){
-        var hnames = $(".hname");
-        console.log(hnames);
-        hnames.each(function(){
-            var _this = $(this);
-            $.getJSON("<?php echo $this->createUrl('/api/houses/getsearch') ?>",{key:_this.html()},function(dt){
-                _this.append(" (" + dt.msg[1].length + ")");
+                items.push(tmp);
             });
+
+            return {
+                results: items
+            };
+        },
+        processResults: function (data, page) {
+            var items = [];
+             $.each(data.msg,function(){
+                var tmp = {
+                    id : this.id,
+                    text : this.title
+                }
+                items.push(tmp);
+            });
+            return {
+                results: items
+            };
+        }
+    }
+        $(function(){
+
+           $('.select2').select2({
+              placeholder: '请选择',
+              allowClear: true
+           });
+
+        var houses_edit = $('#plot');
+        var data = {};
+        if( houses_edit.length && houses_edit.data('houses') ){
+          data = eval(houses_edit.data('houses'));
+        }
+
+        $('#plot').select2({
+          multiple:true,
+          ajax: getHousesAjax,
+          language: 'zh-CN',
+          initSelection: function(element, callback){
+            callback(data);
+          }
         });
-    });
-<?php Tools::endJs('js') ?>
-</script>
+
+             $('.form_datetime').datetimepicker({
+                 autoclose: true,
+                 isRTL: Metronic.isRTL(),
+                 format: 'yyyy-mm-dd hh:ii',
+                 // minView: 'm',
+                 language: 'zh-CN',
+                 pickerPosition: (Metronic.isRTL() ? 'bottom-right' : 'bottom-left'),
+             });
+
+             $('.form_datetime1').datetimepicker({
+                 autoclose: true,
+                 isRTL: Metronic.isRTL(),
+                 format: 'yyyy-mm-dd',
+                 minView: 'month',
+                 language: 'zh-CN',
+                 pickerPosition: (Metronic.isRTL() ? 'bottom-right' : 'bottom-left'),
+             });
+        });
+        ";
+
+Yii::app()->clientScript->registerScript('add',$js,CClientScript::POS_END);
+?>
+<?php
+//Yii::app()->clientScript->registerScriptFile('/static/admin/pages/scripts/union-select.js', CClientScript::POS_END);
+//Yii::app()->clientScript->registerScriptFile('/static/admin/pages/scripts/union-select.js', CClientScript::POS_END);
+?>

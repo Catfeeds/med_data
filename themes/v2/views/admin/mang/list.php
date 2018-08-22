@@ -1,12 +1,12 @@
 <?php
-$this->pageTitle = '参与机构列表';
+$this->pageTitle = $this->controllerName.'列表';
 $this->breadcrumbs = array($this->pageTitle);
 ?>
 <div class="table-toolbar">
     <div class="btn-group pull-left">
         <form class="form-inline">
             <div class="form-group">
-                <?php echo CHtml::dropDownList('type',$type,array('title'=>'机构名'),array('class'=>'form-control','encode'=>false)); ?>
+                <?php echo CHtml::dropDownList('type',$type,array('title'=>'项目名'),array('class'=>'form-control','encode'=>false)); ?>
             </div>
             <div class="form-group">
                 <?php echo CHtml::textField('value',$value,array('class'=>'form-control chose_text')) ?>
@@ -14,27 +14,22 @@ $this->breadcrumbs = array($this->pageTitle);
             <div class="form-group">
                 <?php echo CHtml::dropDownList('time_type',$time_type,array('created'=>'添加时间','updated'=>'修改时间'),array('class'=>'form-control','encode'=>false)); ?>
             </div>
+             
             <?php Yii::app()->controller->widget("DaterangepickerWidget",['time'=>$time,'params'=>['class'=>'form-control chose_text']]);?>
             <button type="submit" class="btn blue">搜索</button>
             <a class="btn yellow" onclick="removeOptions()"><i class="fa fa-trash"></i>&nbsp;清空</a>
         </form>
     </div>
-    <div class="pull-right">
-        <a href="<?php echo $this->createAbsoluteUrl('hospitaledit',['pid'=>$pid]) ?>" class="btn blue">
-            添加参与机构 <i class="fa fa-plus"></i>
-        </a>
-        <a href="<?php echo $this->createAbsoluteUrl('list') ?>" class="btn yellow">
-            返回项目列表 
-        </a>
-    </div>
+    
 </div>
    <table class="table table-bordered table-striped table-condensed flip-content table-hover">
     <thead class="flip-content">
     <tr>
         <th class="text-center">ID</th>
-        <th class="text-center">机构名</th>
-        <th class="text-center">承担例数</th>
-        <th class="text-center">身份</th>
+        <th class="text-center">项目</th>
+        <th class="text-center">患者编号</th>
+        <th class="text-center">申请理由</th>
+        <th class="text-center">申请者/机构</th>
         <th class="text-center">添加时间</th>
         <th class="text-center">修改时间</th>
         <th class="text-center">状态</th>
@@ -42,19 +37,18 @@ $this->breadcrumbs = array($this->pageTitle);
     </tr>
     </thead>
     <tbody>
-    <?php foreach($infos as $k=>$v): ?>
+    <?php foreach($infos as $k=>$v): $user = $v->user; ?>
         <tr>
             <td style="text-align:center;vertical-align: middle"><?php echo $v->id; ?></td>
-            <td class="text-center"><?=$v->hospital?$v->hospital->name:''?></td>
-            <td class="text-center"><?=$v->num?></td> 
-            <td class="text-center"><?=$v->getSf()?></td>
-            <td class="text-center"><?=date('Y-m-d',$v->created)?></td>
-            <td class="text-center"><?=date('Y-m-d',$v->updated)?></td>
-            <td class="text-center"><?php echo CHtml::ajaxLink(UserExt::$status[$v->status],$this->createUrl('changeStatus'), array('type'=>'get', 'data'=>array('id'=>$v->id,'class'=>get_class($v)),'success'=>'function(data){location.reload()}'), array('class'=>'btn btn-sm '.UserExt::$statusStyle[$v->status])); ?></td>
-
+            <td class="text-center"><?=$v->pro?$v->pro->title:''?></td>
+            <td class="text-center"><?=$v->ill->no?></td>
+            <td class="text-center"><?=$v->note?></td>     
+            <td class="text-center"><?=$user?($user->name.$user->hospital->name):''?></td>     
+            <td class="text-center"><?=date('Y-m-d H:i:s',$v->created)?></td>
+            <td class="text-center"><?=date('Y-m-d H:i:s',$v->updated)?></td>
+             <td class="text-center"><?php echo CHtml::ajaxLink(ProBlindUserExt::$status[$v->status],$this->createUrl('changeStatus'), array('type'=>'get', 'data'=>array('id'=>$v->id,'class'=>get_class($v)),'success'=>'function(data){location.reload()}'), array('class'=>'btn btn-sm '.UserExt::$statusStyle[$v->status])); ?></td>
             <td style="text-align:center;vertical-align: middle">
-                <a href="<?php echo $this->createUrl('applylist',array('hid'=>$v->hid,'pid'=>$pid)); ?>" class="btn default btn-xs blue">  权限管理 </a>
-                <a href="<?php echo $this->createUrl('hospitaledit',array('id'=>$v->id,'pid'=>$pid)); ?>" class="btn default btn-xs green"><i class="fa fa-edit"></i> 修改 </a>
+                <a href="<?php echo $this->createUrl('edit',array('id'=>$v->id)); ?>" class="btn default btn-xs green"><i class="fa fa-edit"></i> 修改 </a>
                 <?php echo CHtml::htmlButton('删除', array('data-toggle'=>'confirmation', 'class'=>'btn btn-xs red', 'data-title'=>'确认删除？', 'data-btn-ok-label'=>'确认', 'data-btn-cancel-label'=>'取消', 'data-popout'=>true,'ajax'=>array('url'=>$this->createUrl('del'),'type'=>'get','success'=>'function(data){location.reload()}','data'=>array('id'=>$v->id,'class'=>get_class($v)))));?>
 
 

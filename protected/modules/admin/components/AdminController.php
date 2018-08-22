@@ -73,6 +73,7 @@ class AdminController extends Controller
                 ['label' => '病例列表', 'url' => ['/admin/case/list']],
                 ['label' => '添加病例', 'icon'=>'fa-plus fa','url' => ['/admin/case/edit'],'active'=>$this->route=='admin/case/edit'],
             ]],
+            ['label'=>'破盲申请','icon'=>'icon-speedometer','url'=>['/admin/mang/list'],'active'=>$this->route=='admin/mang/edit'],
             ['label' => '数据管理', 'icon' => 'icon-speedometer', 'items' => [
                 ['label' => '项目数据管理', 'url' => ['/admin/ill/list']],
                 ['label' => '病例数据管理', 'url' => ['/admin/ill/caselist']],
