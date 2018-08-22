@@ -84,7 +84,7 @@ class DataController extends VipController{
 		// $this->render('list',['cate'=>$cate,'infos'=>$infos->data,'pager'=>$infos->pagination,'type' => $type,'value' => $value,'time' => $time,'time_type' => $time_type,]);
 	}
 
-	public function actionEdit($iid='',$id='',$pid='',$ppid='')
+	public function actionEdit($iid='',$id='',$pid='',$ppid='',$isr=0)
 	{
 		// $id = $this
 		$modelName = 'DataExt';
@@ -174,7 +174,7 @@ class DataController extends VipController{
 		}
 		// echo json_encode($dataarr);exit;
 		// var_dump($dataarr);exit;
-		$this->render('edit',['article'=>$info,'ill'=>IllExt::model()->findByPk($iid),'pinfo'=>ProExt::model()->findByPk($pid),'ppid'=>$ppid,'datas'=>$dataarr]);
+		$this->render('edit',['article'=>$info,'ill'=>IllExt::model()->findByPk($iid),'pinfo'=>ProExt::model()->findByPk($pid),'ppid'=>$ppid,'datas'=>$dataarr,'isr'=>$isr]);
 	}
 
 	public function actionSetCode($id='')

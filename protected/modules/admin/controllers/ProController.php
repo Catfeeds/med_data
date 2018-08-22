@@ -416,7 +416,7 @@ class ProController extends AdminController{
 		$this->render('tagedit',['cates'=>$this->cates,'article'=>$info,'mid'=>$mid,'cates1'=>$this->cates1,]);
 	}
 
-	public function actionPlist($id='',$mid='')
+	public function actionPlist($id='',$mid='',$op='')
 	{
 		$type = Yii::app()->request->getQuery('type',[]);
 		$criteria = new CDbCriteria;
@@ -430,6 +430,7 @@ class ProController extends AdminController{
 			$criteria->addInCondition('hid',$type);
 		}
 		$ottags = Yii::app()->db->createCommand("select ppid,id from pro_cate_tag where name='".$tag->name."' and pid=".$pro->id)->queryAll();
+		// var_dump(count($ottags));exit;
 		$petarr = [];
 		$ppidarr = [];
 		if($ottags) {
@@ -449,7 +450,8 @@ class ProController extends AdminController{
 					$pes[] = $value->period->name;
 				foreach ($ppidarr as $ppid) {
 					if($value->ppid==$ppid) {
-						$data[$value->iid][$value->ppid] = $value->data;
+						$op && $nn = 'v'.$op;
+						$data[$value->iid][$value->ppid] = $op?$value->$nn:$value->data;
 					} 
 				}
 				// if(in_array($value->ptid, array_keys($petarr))) {
@@ -458,10 +460,10 @@ class ProController extends AdminController{
 				// }
 			}
 		// var_dump($data);exit;
-		$this->render('plist',['datas'=>$data,'pes'=>$pes,'ppids'=>$ppidarr,'mid'=>$mid,'thisid'=>$id,'type'=>$type]);
+		$this->render('plist',['datas'=>$data,'pes'=>$pes,'ppids'=>$ppidarr,'mid'=>$mid,'thisid'=>$id,'type'=>$type,'op'=>$op]);
 	}
 
-	public function actionExport($id='')
+	public function actionExport($id='',$op='')
 	{
 		$type = Yii::app()->request->getQuery('type',[]);
 		$criteria = new CDbCriteria;
@@ -495,7 +497,8 @@ class ProController extends AdminController{
 					$pes[] = $value->period->name;
 				foreach ($ppidarr as $ppid) {
 					if($value->ppid==$ppid) {
-						$data[$value->iid][$value->ppid] = $value->data;
+						$op && $nn = 'v'.$op;
+						$data[$value->iid][$value->ppid] = $op?$value->$nn:$value->data;
 					} 
 				}
 				// if(in_array($value->ptid, array_keys($petarr))) {

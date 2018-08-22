@@ -125,9 +125,22 @@ $this->breadcrumbs = array( $this->pageTitle);
 <div class="form-actions">
     <div class="row">
         <div class="col-md-offset-3 col-md-9">
-            <button type="submit" class="btn green">保存</button>
+            <?php if(!$isr): ?><button type="submit" class="btn green">保存</button><?php endif; ?>
             <?php echo CHtml::link('返回',$this->createUrl('ilist',['pid'=>$pinfo->id]), array('class' => 'btn default')) ?>
         </div>
     </div>
 </div>
 <?php $this->endWidget() ?>
+<?php
+$js = '';
+if($isr) {
+	$js = "
+	$('input').attr('readonly','readonly');
+	$('select').attr('disabled','disabled');
+        ";
+
+}
+
+
+Yii::app()->clientScript->registerScript('add',$js,CClientScript::POS_END);
+?>

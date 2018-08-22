@@ -17,7 +17,7 @@ $this->breadcrumbs = array($this->pageTitle);
         </form>
     </div>
     <div class="pull-right">
-        <a target="_blank" href="<?php echo $this->createAbsoluteUrl('export',['id'=>$thisid]) ?>" class="btn yellow">
+        <a target="_blank" href="<?php echo $this->createAbsoluteUrl('export',['id'=>$thisid,'op'=>$op]) ?>" class="btn yellow">
             导出数据
         </a>
         <a href="<?php echo $this->createAbsoluteUrl('taglist',['mid'=>$mid]) ?>" class="btn blue">

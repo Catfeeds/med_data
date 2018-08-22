@@ -16,6 +16,7 @@ class IllExt extends Ill{
          return array(
             // 'options'=>array(self::HAS_MANY, 'LbExt', 'lid'),
             'pro'=>array(self::BELONGS_TO, 'ProExt', 'pid'),
+            // 'hospital'=>array(self::BELONGS_TO, 'ProExt', 'hid'),
             'hospital'=>array(self::BELONGS_TO, 'HospitalExt', 'hid'),
             'doctor'=>array(self::BELONGS_TO, 'DoctorExt', 'did'),
         );

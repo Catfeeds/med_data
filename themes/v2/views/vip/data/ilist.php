@@ -31,6 +31,8 @@ $this->breadcrumbs = array($this->pageTitle);
         <tr>
             <th class="text-center">姓名</th>
             <th class="text-center">编号</th>
+
+            <th class="text-center">所属机构</th>
             <th class="text-center">创建时间</th>
             <th class="text-center">修改时间</th>
             <th class="text-center">组别名</th>
@@ -38,23 +40,32 @@ $this->breadcrumbs = array($this->pageTitle);
         </tr>
     </thead>
     <tbody>
-    <?php foreach($infos as $v): $pro = $v->pro; $mangword = ''; if(!$pro->mflx) {
+    <?php foreach($infos as $v): $pro = $v->pro; $mangword = ''; if(Yii::app()->user->hid!=$v->hid) $mangword = '暂无权限查看'; else {
+
+            if(!$pro->mflx) {
         $problind = ProBlindExt::model()->find("pid=$pid and no=".$v->no);
         if($problind)
             $mangword = $problind->name;
         } elseif ($prob = ProBlindUserExt::model()->find("pid=$pid and did=".$v->id)) {
             $mangword = '已申请破盲';
             $prob->status==1 && $mangword = $prob->blind->name;
-        } ?>
+        } 
+            } ?>
         <tr>
             <td  class="text-center"><?php echo $v->name ?></td>
             <td class="text-center"><?php echo $v->no ?></td>
+            <td class="text-center"><?php echo $v->hospital?$v->hospital->name:'' ?></td>
             <td class="text-center"><?php echo date('Y-m-d H:i:s',$v->created); ?></td>
             <td class="text-center"><?php echo date('Y-m-d H:i:s',$v->updated); ?></td>
             <td class="text-center"><?=!$mangword?'<a class="btn btn-xs blue" href="applyPo?iid='.$v->id.'">申请破盲</a>':$mangword?></td>
             <td  class="text-center">
+            <?php if(Yii::app()->user->hid!=$v->hid): ?>
+                <a href="<?php echo $this->createUrl('edit',array('iid'=>$v->id,'pid'=>$pid,'isr'=>1)) ?>" class="btn default btn-xs blue"> 数据查看 </a>
+            <?php else:?>
                 <a href="<?php echo $this->createUrl('edit',array('iid'=>$v->id,'pid'=>$pid, 'referrer'=>Yii::app()->request->url)) ?>" class="btn default btn-xs blue"><i class="fa fa-edit"></i> 数据录入 </a>
                 <a href="<?php echo $this->createUrl('editinfo',array('id'=>$v->id,'pid'=>$pid, 'referrer'=>Yii::app()->request->url)) ?>" class="btn default btn-xs green"><i class="fa fa-edit"></i> 编辑 </a>
+            <?php endif;?>
+                
             </td>
         </tr>
     <?php endforeach; ?>
