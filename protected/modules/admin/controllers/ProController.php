@@ -544,4 +544,12 @@ class ProController extends AdminController{
 		ExcelHelper::cvs_write_browser(date("YmdHis",time()),$pes,$edata); 
 	}
 
+	public function actionChangeLockStatus($id)
+	{
+		$obj = ProExt::model()->findByPk($id);
+		$obj->is_lock = $obj->is_lock?0:1;
+		$obj->save();
+		$this->setMessage('操作成功');
+	}
+
 }

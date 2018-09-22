@@ -7,6 +7,8 @@
  * @property integer $id
  * @property string $title
  * @property integer $num
+ * @property integer $is_bl
+ * @property integer $is_lock
  * @property string $url
  * @property string $kw
  * @property string $sjzzs
@@ -39,13 +41,13 @@ class Pro extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('created', 'required'),
-			array('num, area, ks, type, uid, status, created, updated', 'numerical', 'integerOnly'=>true),
+			array('num, is_bl, is_lock, area, ks, type, uid, status, created, updated', 'numerical', 'integerOnly'=>true),
 			array('title, kw', 'length', 'max'=>255),
 			array('url, sjzzs, dis', 'length', 'max'=>100),
 			array('data_conf', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, title, num, url, kw, sjzzs, dis, area, ks, data_conf, type, uid, status, created, updated', 'safe', 'on'=>'search'),
+			array('id, title, num, is_bl, is_lock, url, kw, sjzzs, dis, area, ks, data_conf, type, uid, status, created, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -69,6 +71,8 @@ class Pro extends CActiveRecord
 			'id' => 'ID',
 			'title' => 'Title',
 			'num' => 'Num',
+			'is_bl' => 'Is Bl',
+			'is_lock' => 'Is Lock',
 			'url' => 'Url',
 			'kw' => 'Kw',
 			'sjzzs' => 'Sjzzs',
@@ -105,6 +109,8 @@ class Pro extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('title',$this->title,true);
 		$criteria->compare('num',$this->num);
+		$criteria->compare('is_bl',$this->is_bl);
+		$criteria->compare('is_lock',$this->is_lock);
 		$criteria->compare('url',$this->url,true);
 		$criteria->compare('kw',$this->kw,true);
 		$criteria->compare('sjzzs',$this->sjzzs,true);

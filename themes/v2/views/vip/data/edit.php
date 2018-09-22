@@ -125,7 +125,7 @@ $this->breadcrumbs = array( $this->pageTitle);
 <div class="form-actions">
     <div class="row">
         <div class="col-md-offset-3 col-md-9">
-            <?php if(!$isr): ?><button type="submit" class="btn green">保存</button><?php endif; ?>
+            <?php if(!$isr && !$pinfo->is_lock): ?><button type="submit" class="btn green">保存</button><?php endif; ?>
             <?php echo CHtml::link('返回',$this->createUrl('ilist',['pid'=>$pinfo->id]), array('class' => 'btn default')) ?>
         </div>
     </div>

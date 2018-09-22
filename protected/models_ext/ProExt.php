@@ -11,6 +11,9 @@ class ProExt extends Pro{
     public static $mang = [
         '非盲','双盲'
     ];
+    public static $is_lock = [
+        '开放','锁定'
+    ];
 	/**
      * 定义关系
      */

@@ -45,7 +45,8 @@ $this->breadcrumbs = array($this->pageTitle);
         <th class="text-center">地区</th>
         <th class="text-center">添加时间</th>
         <th class="text-center">修改时间</th>
-        <th class="text-center">状态</th>
+        <th class="text-center">项目状态</th>
+        <th class="text-center">锁定状态</th>
         <th class="text-center">操作</th>
     </tr>
     </thead>
@@ -63,7 +64,7 @@ $this->breadcrumbs = array($this->pageTitle);
             <td class="text-center"><?=date('Y-m-d',$v->created)?></td>
             <td class="text-center"><?=date('Y-m-d',$v->updated)?></td>
             <td class="text-center"><?php echo CHtml::ajaxLink(UserExt::$status[$v->status],$this->createUrl('changeStatus'), array('type'=>'get', 'data'=>array('id'=>$v->id,'class'=>get_class($v)),'success'=>'function(data){location.reload()}'), array('class'=>'btn btn-sm '.UserExt::$statusStyle[$v->status])); ?></td>
-
+            <td class="text-center"><?php echo CHtml::ajaxLink(ProExt::$is_lock[$v->is_lock],$this->createUrl('changeLockStatus'), array('type'=>'get', 'data'=>array('id'=>$v->id,'class'=>get_class($v)),'success'=>'function(data){location.reload()}'), array('class'=>'btn btn-sm '.UserExt::$statusStyle[!($v->is_lock)])); ?></td>
             <td style="text-align:center;vertical-align: middle">
                 <a href="<?php echo $this->createUrl('blindlist',array('pid'=>$v->id)); ?>" class="btn default btn-xs purple"> 盲表设计 </a>
                 <a href="<?php echo $this->createUrl('hospitallist',array('pid'=>$v->id)); ?>" class="btn default btn-xs blue"> 承担机构<?=($vh = $v->hospital_num)?('('.$vh.')'):''?> </a>
